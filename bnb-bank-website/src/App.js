@@ -7,11 +7,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import WalletConnectComponent from './Components/WalletConnect';
 import DaoProposalsComponent from './Components/DaoProposals';
+import DepositComponent from './Components/Deposits';
 import PresaleLink from './Components/PresaleLink'
 import BackToTopButton from './Components/BackToTopButton';
 import DaoFeatureRequest from './Components/DaoFeatureRequest';
 import './App.css';
 import './Components/DaoProposals.css';
+import './Components/Deposits.css';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Helmet } from 'react-helmet';
@@ -208,7 +210,14 @@ const App = () => {
       </Element>
 
       <Element name="deposits" className="section">
-
+      <div>
+          <Element name="deposits" className="section">
+            <Fade>
+              <h1>Deposits</h1>
+              <DepositComponent provider={provider} setBalance={balance} />
+            </Fade>
+          </Element>
+        </div>
       </Element>
     
       {/* <Element name="tokenomics" className="section">
@@ -314,7 +323,8 @@ const App = () => {
             </Fade>
           </Element>
         </div>
-      )}
+      )},
+
       <Element name="socials" className="section">
         <Fade>
           <h2 class="app-text">Socials & Contact</h2>
