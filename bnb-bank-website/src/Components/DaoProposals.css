@@ -1,0 +1,155 @@
+.dao-proposals {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.create-proposal {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.create-proposal h3 {
+  margin-bottom: 10px;
+}
+
+.proposal-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #F3BA2F;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.create-button,
+.vote-button {
+  background-color: #F3BA2F;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px;
+  text-transform: uppercase;
+}
+
+.create-button:hover,
+.vote-button:hover {
+  background-color: #333;
+}
+
+.proposal {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  border: 1px solid #F3BA2F;
+}
+
+.proposal h3 {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.proposal ul {
+  list-style: none;
+  padding: 0;
+  text-align: center;
+}
+
+.proposal li {
+  margin-bottom: 5px;
+}
+
+.proposal .result {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.proposal .result .option {
+  margin: 5px 0;
+}
+
+.proposal .result .winner {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+
+.result em {
+  font-style: italic;
+}
+
+/* Error Modal Styles */
+.error-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.error-modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.error-modal-content h3 {
+  margin-bottom: 10px;
+}
+
+.error-modal-content p {
+  margin-bottom: 20px;
+}
+
+.error-modal-content button {
+  background-color: #F3BA2F;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.error-modal-content button:hover {
+  background-color: #333;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-button {
+  background-color: #F3BA2F;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px;
+  text-transform: uppercase;
+}
+
+.pagination-button:hover {
+  background-color: #333;
+}

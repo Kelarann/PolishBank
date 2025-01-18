@@ -1,0 +1,9 @@
+build*
+truffle-config.js
+truffle-config.js.test
+truffle-config.js.prod
+migrations
+settings.json
+.vscode
+node_modules
+
