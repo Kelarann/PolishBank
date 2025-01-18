@@ -1036,15 +1036,14 @@ contract BnBBankDao is Context, IERC20, Ownable {
         emit Deposited(msg.sender, amount, address(this));
     }
 
-    function withdrawDeposit() public {
-        uint256 amount = deposits[msg.sender];
-        require(amount > 0, "Insufficient balance");
-
-        deposits[msg.sender] = deposits[msg.sender].sub(amount);
+    function withdrawDeposit(uint256 amount) public {
+        require(deposits[msg.sender] >= amount, "Insufficient deposit");
+        deposits[msg.sender] -= amount;
         totalDeposited -= amount;
-        _transfer(address(this), _msgSender(), amount);
-
-        emit Withdrawn(msg.sender, amount, address(this));
+        
+        _transferTokens(address(this), payable(msg.sender), amount);
+        emit Withdrawn(payable(msg.sender), amount, address(this));
+       
     }
 
     function terminationReward(address user) public view returns (uint256) {
