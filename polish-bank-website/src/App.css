@@ -1,0 +1,531 @@
+:root {
+  --primary-color: #FF4D4D;
+  --primay-color-light: #D32F2F;    
+  --background-color: #181818; 
+  --background-color-light: #252525;
+  --text-color: #ffffff;       
+  --secondary-text-color: #e0e0e0; 
+  --border-color: #333333;
+  --disabled-color: #808080;   
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #181818 ;
+}
+
+hidden {
+  display: none;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: var(--background-color) ;
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.App-logo {
+  width: 400px;           /* Domyślna szerokość na większe ekrany */
+  height: auto;           /* Automatyczne proporcje */
+  margin-bottom: 20px;    /* Odstęp poniżej logo */
+  object-fit: contain;    /* Utrzymanie proporcji bez zniekształceń */
+}
+
+.about-logo {
+  width: 15%;
+  max-width: 250px;
+}
+
+h1, h2, h3, h4 , .app-text {
+  text-decoration: none;
+  color: var(--primary-color) !important;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+p {
+  text-decoration: none;
+  color: var(--text-color) !important;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+nav ul li {
+  display: inline;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: var(--primary-color);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.section {
+  padding: 100px 20px;
+  border-bottom: 1px solid eaeaea;
+}
+
+.roadmap-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.roadmap-card {
+  background-color: var(--background-color);
+  border: 1px solid var(--primary-color);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 300px;
+  text-align: left;
+  transition: transform 0.3s;
+}
+
+.roadmap-card:hover {
+  transform: scale(1.05);
+}
+
+.roadmap-card h2 {
+  color: var(--primary-color);
+}
+
+.roadmap-card ul {
+  color: var(--text-color);
+  font-size: 16px;
+}
+
+.socials-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+.social-item {
+  display: flex;
+  align-items: center;
+  margin: 0 20px;
+}
+
+.wallet-connect {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.wallet-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.wallet-address,
+.wallet-balance {
+  margin: 0;
+  font-size: 16px;
+  color: var(--primary-color);
+}
+
+.wallet-button {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+  border: 2px solid var(--primary-color);
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.wallet-button:hover {
+  background-color: var(--primay-color-light);
+  color: var(--primary-color);
+}
+
+/* Tooltip text */
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: var(--background-color);
+  color: var(--background-color);
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px 0;
+  border: 1px solid var(--background-color);
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position the tooltip above the text */
+  left: 50%;
+  margin-left: -100px; /* Center the tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Show the tooltip text when hovering over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Styling for the disabled state of the DAO link */
+.disabled-link {
+  pointer-events: none;
+  color: var(--disabled-color);
+}
+
+
+/* Disabled link styling */
+.disabled-link {
+  color: var(--disabled-color);
+  cursor: not-allowed;
+}
+
+/* Disabled element styling */
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown content */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: var(--background-color);
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  border: 1px solid black; /* Black borderline for the whole option list */
+}
+
+/* Dropdown links */
+.dropdown-content a {
+  color: var(--background-color);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid var(--background-color); /* Black borderline between options */
+  position: relative; /* Ensure the chevron is positioned correctly */
+}
+
+.dropdown-content a:last-child {
+  border-bottom: none; /* Remove bottom border from the last option */
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.chart-container {
+  max-width: 500px;
+  margin: 0 auto 40px auto;
+}
+
+.table-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center; 
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto; 
+}
+
+.table-container th, .table-container td {
+  border: 1px solid var(--background-color);
+  padding: 8px;
+}
+
+.table-container th {
+  background-color: var(--background-color);
+  font-weight: bold;
+}
+
+.table-container tr:nth-child(even) {
+  background-color: var(--background-color);
+}
+
+.table-container tr:hover {
+  background-color: var(--text-color);
+}
+
+.table-container th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #181818;
+  color: white;
+}
+
+.wallet-connect .popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  z-index: 1000;
+}
+
+.wallet-connect .popup-content {
+  text-align: center;
+}
+
+.wallet-connect .popup-button {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.wallet-connect .wallet-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.wallet-connect .wallet-info {
+  text-align: center;
+}
+
+.contract-address {
+  text-align: center;
+  margin: 20px auto; /* Centers the element horizontally */
+  padding: 10px 20px; /* Slightly longer than the text */
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border-radius: 8px;
+  width: fit-content; /* Dynamically adjusts to the content width */
+}
+
+.contract-address h2 {
+  margin-bottom: 10px;
+  color: var(--primary-color);          /* Akcent w kolorze czerwonym */
+}
+
+.contract-address .address {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px;
+  word-break: break-all;
+  cursor: pointer;
+  background-color: #181818; /* Ciemniejszy szary dla adresu */
+  padding: 10px;
+  border: 1px solid var(--primary-color); /* Czerwony akcent */
+  border-radius: 5px;
+  color: var(--secondary-text-color);           /* Jasnoszary tekst dla lepszej czytelności */
+}
+
+.contract-address .address:hover {
+  background-color: var(--background-color-light); /* Subtelne rozjaśnienie przy najechaniu */
+}
+
+.contract-address .copy-button {
+  margin-top: 10px;
+  background-color: var(--primary-color); /* Czerwony akcent przycisku */
+  color: var(--text-color);              /* Biały tekst */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.contract-address .copy-button:hover {
+  background-color: var(--primay-color-light); /* Głębszy odcień czerwieni przy najechaniu */
+}
+
+.slider-container {
+  margin-top: 20px;
+}
+
+.static-logos {
+  margin-top: 20px;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.logo-image {
+  height: 300px; 
+  width: auto;
+  opacity: 0.7; 
+  margin: 0 10px; 
+}
+
+.slider-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slider-item img {
+  height: 100px; /* Adjust as needed */
+  width: auto;
+  opacity: 0.7; /* 70% visibility */
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .section {
+    padding: 50px 20px;
+  }
+
+  .roadmap-container {
+    gap: 15px;
+  }
+
+  .roadmap-card {
+    max-width: 45%;
+  }
+}
+
+@media (max-width: 768px) {
+  .App-logo {
+    width: 200px;        
+    margin-bottom: 15px; 
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .roadmap-card {
+    max-width: 90%;
+  }
+
+  .socials-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 20px;
+  }
+  
+  .social-item {
+    display: flex;
+    align-items: center;
+    margin: 0 20px;
+  }
+
+  .wallet-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .wallet-button {
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .App-logo {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .section {
+    padding: 30px 10px;
+  }
+
+  .roadmap-card {
+    max-width: 100%;
+  }
+
+  .about-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .about-logo {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .about-text {
+    max-width: 100%;
+  }
+
+  .socials-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 20px;
+  }
+  
+  .social-item {
+    display: flex;
+    align-items: center;
+    margin: 0 20px;
+  }
+
+  .wallet-connect {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .wallet-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    gap: 10px;
+  }
+  
+  .wallet-button {
+    padding: 8px 16px;
+  }
+}
