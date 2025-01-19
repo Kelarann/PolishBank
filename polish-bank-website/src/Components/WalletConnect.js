@@ -3,11 +3,11 @@ import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
+import Account from './Account.js';
 
 const WalletConnectComponent = ({ setAppAccount, setAppBalance, setAppProvider }) => {
   const [account, setAccount] = useState(null);
   const [balance, setBalance] = useState('0.0');
-  const [BNBbalance, setBNBbalance] = useState('0.0');
   const [BDAObalance, setBDAObalance] = useState('0.0');
   const [showPopup, setShowPopup] = useState(false);
   
@@ -85,7 +85,6 @@ const WalletConnectComponent = ({ setAppAccount, setAppBalance, setAppProvider }
         console.log("Disconnected");
         setAccount(null);
         setAppAccount(null);
-        setBNBbalance('0.0');
         setBDAObalance('0.0');
         setBalance('0.0')
         setAppBalance('0.0');
@@ -99,21 +98,15 @@ const WalletConnectComponent = ({ setAppAccount, setAppBalance, setAppProvider }
   const fetchBalances = async (provider, address) => {
     const network = await provider.getNetwork();
     try {
-      // Fetch BNB balance
-      const BNBbalance = await provider.getBalance(address);
-      const formattedBNBbalance = ethers.formatEther(BNBbalance);
-      console.log("Fetched BNB Balance:", formattedBNBbalance);
-      setBNBbalance(formattedBNBbalance);
-
       // Fetch BDAO Coin balance
       console.log(new ethers.Contract(BDAO_CONTRACT_MAP[network.name + '_CONTRACT_ADDRESS'], [BDAO_CONTRACT_MAP[network.name + '_ABI']], provider))
-      const bdaoContract = new ethers.Contract(BDAO_CONTRACT_MAP[network.name + '_CONTRACT_ADDRESS'], [BDAO_CONTRACT_MAP[network.name + '_ABI']], provider);
-      const bdaoBalance = await bdaoContract.balanceOf(address);
-      const formattedBdaoBalance = ethers.formatUnits(bdaoBalance, 18);
-      console.log("Fetched BDAO Balance:", formattedBdaoBalance);
-      setBDAObalance(formattedBdaoBalance);
-      setBalance(formattedBdaoBalance);
-      setAppBalance(formattedBdaoBalance);
+      const BDAOContract = new ethers.Contract(BDAO_CONTRACT_MAP[network.name + '_CONTRACT_ADDRESS'], [BDAO_CONTRACT_MAP[network.name + '_ABI']], provider);
+      const BDAOBalance = await BDAOContract.balanceOf(address);
+      const formattedBDAOBalance = ethers.formatUnits(BDAOBalance, 18);
+      console.log("Fetched BDAO Balance:", formattedBDAOBalance);
+      setBDAObalance(formattedBDAOBalance);
+      setBalance(formattedBDAOBalance);
+      setAppBalance(formattedBDAOBalance);
     } catch (error) {
       console.error("Error fetching balances:", error);
     }
@@ -123,7 +116,6 @@ const WalletConnectComponent = ({ setAppAccount, setAppBalance, setAppProvider }
     web3Modal.clearCachedProvider();
     setAccount(null);
     setAppAccount(null);
-    setBNBbalance('0.0');
     setBDAObalance('0.0');
     setAppBalance('0.0');
     setBalance('0.0')
@@ -157,17 +149,14 @@ const WalletConnectComponent = ({ setAppAccount, setAppBalance, setAppProvider }
           Connect Wallet
         </button>
       ) : (
-        <div className="wallet-info">
-          <h3><strong>Wallet Information</strong></h3>
-          <p className="wallet-address" onClick={() => copyToClipboard(account)}>
-            <strong>Wallet Address:</strong> {account}
-          </p>
-          <p className="wallet-balance"><strong>BNB:</strong> {BNBbalance}</p>
-          <p className="wallet-balance"><strong>BDAO:</strong> {BDAObalance}</p>
-          <button className="wallet-button" onClick={disconnectWallet}>
-            Disconnect
-          </button>
-        </div>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "50px" }}>
+        <Account
+          account={account}
+          BDAObalance={BDAObalance}
+          copyToClipboard={copyToClipboard}
+          disconnectWallet={disconnectWallet}
+        />
+      </div>
       )}
     </div>
   );

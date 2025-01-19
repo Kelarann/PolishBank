@@ -185,7 +185,7 @@ const App = () => {
                 <Link to="dao" smooth={true} duration={500} className="disabled-link">DAO</Link>
               )}
               {!isDaoEnabled && (
-                <span className="tooltiptext">DAO is disabled because your wallet is disconnected or you have insufficient balance of BDAO required for DAO Voting. We require to hold min <strong>{1000000000 * 0.000001 + " BNBB"}</strong></span>
+                <span className="tooltiptext">DAO is disabled because your wallet is disconnected or you have insufficient balance of PLN required for DAO Voting. We require to hold min <strong>{1000000000 * 0.000001 + " BNBB"}</strong></span>
               )}
             </li>
             <li><Link to="socials" smooth={true} duration={500}> <div class="app-text">Socials & Contact</div></Link></li>
