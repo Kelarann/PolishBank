@@ -1,2 +1,0 @@
-# bnbbanktoken
-BSC token.

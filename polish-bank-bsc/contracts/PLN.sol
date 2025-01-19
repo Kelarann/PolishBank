@@ -1,6 +1,6 @@
 /**
 
-BnB Bank Training Project - Move banking products on chain.
+Polish Bank -First national bank on blockchain.
 
 
 **/
@@ -521,7 +521,7 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
     ) external;
 }
 
-contract BnBBankDao is Context, IERC20, Ownable {
+contract PolishNationalCoin is Context, IERC20, Ownable {
     using SafeMath for uint256;
     using Address for address;
 
@@ -542,8 +542,8 @@ contract BnBBankDao is Context, IERC20, Ownable {
     Proposal[] public proposals;
     mapping(uint256 => mapping(address => bool)) public hasVoted;
 
-    string private _name = "BnBBankDAO";
-    string private _symbol = "tBDAO";
+    string private _name = "Polish National Coin";
+    string private _symbol = "tPLN";
     uint8 private _decimals = 18;
     uint256 private _tTotal = 1000000000 * 10 ** 18;
     uint256 private _tFeeTotal;

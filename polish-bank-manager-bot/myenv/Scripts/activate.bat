@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\devte\Desktop\bnb-bank-manager-bot-\myenv
+set VIRTUAL_ENV=C:\Users\devte\Desktop\polish-bank-manager-bot-\myenv
 
 if not defined PROMPT set PROMPT=$P$G
 
