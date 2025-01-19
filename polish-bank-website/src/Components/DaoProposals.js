@@ -233,7 +233,7 @@ const DaoProposalsComponent = ({ provider }) => {
             dateFormat="MMMM d, yyyy h:mm aa"
             className="primary-input"
           />
-          <button type="submit" className="create-button">Create Proposal</button>
+          <button type="submit" className="primary-button">Create Proposal</button>
         </form>
       )}
       {currentProposals.length === 0 ? (
@@ -246,7 +246,7 @@ const DaoProposalsComponent = ({ provider }) => {
               proposal.options.map((option, idx) => (
                 <button
                   key={idx}
-                  className="vote-button"
+                  className="primary-button"
                   onClick={() => voteOnProposal(indexOfFirstProposal + index, idx)}
                 >
                   {option}
@@ -278,7 +278,7 @@ const DaoProposalsComponent = ({ provider }) => {
       )}
       <div className="pagination">
         {currentPage > 1 && <button onClick={prevPage} className="pagination-button">Previous</button>}
-        {indexOfLastProposal < proposals.length && <button onClick={nextPage} className="pagination-button">Next</button>}
+        {indexOfLastProposal < proposals.length && <button onClick={nextPage} className="primary-button">Next</button>}
       </div>
     </div>
   );

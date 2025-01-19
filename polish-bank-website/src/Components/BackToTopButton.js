@@ -28,7 +28,7 @@ const BackToTopButton = () => {
 
   return (
     showBackToTop && (
-      <button onClick={scrollToTop} className="back-to-top">
+      <button  onClick={scrollToTop} className="back-to-top">
         <FontAwesomeIcon icon={faArrowUp} />
       </button>
     )

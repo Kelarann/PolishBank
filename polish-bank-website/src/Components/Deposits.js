@@ -67,7 +67,7 @@ const DepositComponent = ({ provider }) => {
           required
           className="primary-input"
         />
-        <button type="submit" className="create-button">Create deposit</button>
+        <button type="submit" className="primary-button">Create deposit</button>
       </form>
       {currentDeposits.length === 0 ? (
         <p>No deposits available</p>

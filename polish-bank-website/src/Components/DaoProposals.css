@@ -25,23 +25,6 @@
   box-sizing: border-box;
 }
 
-.create-button,
-.vote-button {
-  background-color: var(--primary-color);
-  color: var(--background-color);
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 5px;
-  text-transform: uppercase;
-}
-
-.create-button:hover,
-.vote-button:hover {
-  background-color: #333;
-}
-
 .proposal {
   background-color: var(--background-color);
   padding: 20px;
