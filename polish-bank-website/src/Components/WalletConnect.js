@@ -7,7 +7,7 @@ import Account from './Account.js';
 import BDAO_ABI from "../config/BDAO_ABI.json";
 
 
-const WalletConnectComponent = ({ setAppAccount, setAppBalance, setAppProvider }) => {
+const WalletConnectComponent = ({ setAppAccount, setAppAccounts, setAppBalance, setAppProvider }) => {
   const [mainAccount, setMainAccount] = useState(null);
   const [accounts, setMainAccounts] = useState(null);
   const [balance, setBalance] = useState('0.0');
@@ -134,6 +134,7 @@ const WalletConnectComponent = ({ setAppAccount, setAppBalance, setAppProvider }
 
       // Pass the accountBalances object to the Account component
       setMainAccounts(accountBalances);
+      setAppAccounts(accountBalances);
 
     } catch (error) {
       console.error("Error fetching balances:", error);

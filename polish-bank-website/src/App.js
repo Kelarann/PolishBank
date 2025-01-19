@@ -43,27 +43,29 @@ const App = () => {
     <meta name="twitter:image" content="%PUBLIC_URL%/logo.webp" />
   </Helmet>
 
-  const [account, setAccount] = useState(null);
+  const [mainAccount, setAccount] = useState(null);
+  const [appAccounts, setAppAcounts] = useState(null);
   const [balance, setBalance] = useState('0.0');
   const [isDaoEnabled, setIsDaoEnabled] = useState(false);
   const [provider, setProvider] = useState(null);
 
   useEffect(() => {
+    console.log("mainAccount:", mainAccount);
     const parsedBalance = parseFloat(balance);
-    const newIsDaoEnabled = account && parsedBalance > (1000000000 * 0.000001);
-    console.log("Account:", account);
+    const newIsDaoEnabled = mainAccount && (parsedBalance > (1000000000 * 0.000001) || (appAccounts && appAccounts.some(acc => parseFloat(acc.balance) > (1000000000 * 0.000001))));
+    console.log("mainAccount:", mainAccount);
     console.log("Balance:", balance);
     console.log("Parsed Balance:", parsedBalance);
     console.log("isDaoEnabled:", newIsDaoEnabled);
     setIsDaoEnabled(newIsDaoEnabled);
-  }, [account, balance]);
+  }, [mainAccount, balance]);
 
 
 
   const roadmapData = [
     { quarter: '25Q2', milestones: [
       { text: 'Create Website', status: 'completed' }, 
-      { text: 'Create X Account', status: 'completed' }, 
+      { text: 'Create X mainAccount', status: 'completed' }, 
       { text: 'WalletConnect Protocol V1', status: 'completed' }, 
       { text: 'DAO', status: 'completed' }, 
       { text: 'Deposits', status: 'in-progress' } ] },
@@ -168,6 +170,7 @@ const App = () => {
       <header className="App-header">
         <img src={logo} alt="Polish Bank Logo" className="App-logo" />
         <h1 class="app-text" >Polish Bank</h1>
+
         <nav>
           <ul>
             <li><Link to="about" smooth={true} duration={500}>About us</Link></li>
@@ -189,29 +192,29 @@ const App = () => {
                 <Link to="dao" smooth={true} duration={500} className="disabled-link">DAO</Link>
               )}
               {!isDaoEnabled && (
-                <span className="tooltiptext">DAO is disabled because your wallet is disconnected or you have insufficient balance of PLN required for DAO Voting. We require to hold min <strong>{1000000000 * 0.000001 + " BNBB"}</strong></span>
+                <span className="tooltiptext">DAO is disabled because your wallet is disconnected or you have insufficient balance of PLN required for DAO Voting. We require to hold min <strong>{1000000000 * 0.000001 + " PLN"}</strong></span>
               )}
             </li>
             <li><Link to="socials" smooth={true} duration={500}> <div class="app-text">Socials & Contact</div></Link></li>
           </ul>
           <hidden><PresaleLink /></hidden>
+          <Element name="about" className="section">
+        <div className="about-container">
+          <div className="about-text">
+            <h1>Blockchain Training Project</h1>
+            <p> Creating banking products <strong>on chain </strong> </p>
+          </div>
+        </div>
+      </Element>
           <div className="contract-address">
             <h2 class="app-text">PLN Currency Contract Address</h2>
             <p className="address" onClick={copyToClipboard}>
               {contractAddress}
             </p>
           </div>
-          <WalletConnectComponent setAppAccount={setAccount} setAppBalance={setBalance} setAppProvider={setProvider} />
+          <WalletConnectComponent setAppAccount={setAccount} setAppAcounts={setAppAcounts} setAppBalance={setBalance} setAppProvider={setProvider} />
         </nav>
       </header>
-      <Element name="about" className="section">
-        <div className="about-container">
-          <div className="about-text">
-            <h1>Polish Bank Training Project</h1>
-            <p> Creating banking products <strong>on chain </strong> </p>
-          </div>
-        </div>
-      </Element>
 
       <Element name="deposits" className="section">
       <div>
@@ -323,7 +326,7 @@ const App = () => {
           <Element name="dao-feature-request" className="section">
             <Fade>
               <h1>Feature Request</h1>
-              <DaoFeatureRequest provider={provider} account={account} />
+              <DaoFeatureRequest provider={provider} mainAccount={mainAccount} />
             </Fade>
           </Element>
         </div>
