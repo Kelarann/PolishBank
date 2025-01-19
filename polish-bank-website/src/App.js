@@ -61,8 +61,12 @@ const App = () => {
 
 
   const roadmapData = [
-    { quarter: '24Q3', milestones: [{ text: 'Create Website', status: 'completed' }, { text: 'Create X Account', status: 'completed' }, { text: 'WalletConnect Protocol V1', status: 'completed' }, { text: 'Community DAO', status: 'in-progress' }, { text: 'Fair Launch on BSC & Dex Trading', status: 'in-progress' }, { text: 'CMC application', status: 'in-progress' }, { text: 'Social Media Promotion', status: 'in-progress' }, { text: 'First Audit chosen by community', status: 'in-progress' }] },
-    { quarter: '24Q4', milestones: [{ text: 'Testnet', status: 'in-progress' }, { text: 'Cex Listings', status: 'in-progress' }, { text: 'RPC data published', status: 'in-progress' }, { text: 'Marketing', status: 'in-progress' }, { text: 'WalletConnect Protocol V2', status: 'in-progress' }] },
+    { quarter: '25Q2', milestones: [
+      { text: 'Create Website', status: 'completed' }, 
+      { text: 'Create X Account', status: 'completed' }, 
+      { text: 'WalletConnect Protocol V1', status: 'completed' }, 
+      { text: 'DAO', status: 'completed' }, 
+      { text: 'Deposits', status: 'in-progress' } ] },
   ];
 
   const socials = [
