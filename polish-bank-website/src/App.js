@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Element } from 'react-scroll';
-import logo from './logo.svg';
+import logo from './logo.webp';
 import { Fade } from 'react-awesome-reveal';
 import { SocialIcon } from 'react-social-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -33,14 +33,14 @@ const App = () => {
 
     <meta property="og:title" content="Polish Bank" />
     <meta property="og:description" content="Join Polish Bank " />
-    <meta property="og:image" content="%PUBLIC_URL%/logo.svg" />
+    <meta property="og:image" content="%PUBLIC_URL%/logo.webp" />
     <meta property="og:url" content="https://polishBank.com" />
     <meta property="og:type" content="website" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Polish Bank" />
     <meta name="twitter:description" content="Join Polish Bank " />
-    <meta name="twitter:image" content="%PUBLIC_URL%/logo.svg" />
+    <meta name="twitter:image" content="%PUBLIC_URL%/logo.webp" />
   </Helmet>
 
   const [account, setAccount] = useState(null);
