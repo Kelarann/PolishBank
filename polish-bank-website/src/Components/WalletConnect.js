@@ -7,10 +7,7 @@ import Account from './Account.js';
 import BDAO_ABI from "../config/BDAO_ABI.json";
 
 
-const WalletConnectComponent = ({ setAppAccount, setAppAccounts, setAppBalance, setAppProvider }) => {
-  const [mainAccount, setMainAccount] = useState(null);
-  const [accounts, setMainAccounts] = useState(null);
-  const [balance, setBalance] = useState('0.0');
+const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setAppAccounts, setAppBalance, setAppProvider }) => {
   const [BDAObalance, setBDAObalance] = useState('0.0');
   const [deposits, setDepositsBalance] = useState('0.0');
   const [showPopup, setShowPopup] = useState(false);
@@ -70,33 +67,28 @@ const WalletConnectComponent = ({ setAppAccount, setAppAccounts, setAppBalance, 
         return;
       }
 
-      const accounts = await provider.listAccounts();
-      console.log("Connected Accounts:", accounts);
-      setMainAccounts(accounts);
-      const mainAccount = accounts[0].address;
+      const appAccounts = await provider.listAccounts();
+      console.log("Connected Accounts:", appAccounts);
+      setAppAccounts(appAccounts);
+      const mainAccount = appAccounts[0].address;
       console.log("Connected Account:", mainAccount);
       setMainAccount(mainAccount);
-      setAppAccount(mainAccount);
       await fetchBalances(provider, mainAccount);
 
       setAppProvider(provider);
 
-      instance.on('accountsChanged', async (accounts) => {
-        const newAccount = accounts[0];
+      instance.on('accountsChanged', async (appAccounts) => {
+        const newAccount = appAccounts[0];
         console.log("Account changed:", newAccount);
         setMainAccount(newAccount);
-        setAppAccount(newAccount);
         await fetchBalances(provider, newAccount);
       });
 
       instance.on('disconnect', () => {
         console.log("Disconnected");
         setMainAccount(null);
-        setMainAccounts(null);
-        setAppAccount(null);
+        setAppAccounts(null);
         setBDAObalance('0.0');
-        setBalance('0.0')
-        setAppBalance('0.0');
         setAppProvider(null);
       });
     } catch (error) {
@@ -110,8 +102,8 @@ const WalletConnectComponent = ({ setAppAccount, setAppAccounts, setAppBalance, 
       // Fetch BDAO Coin balance
       console.log(new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, provider))
       const BDAOContract = new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, provider);
-      
-      const accountBalances = await Promise.all(accounts.map(async (account) => {
+
+      const accountBalances = await Promise.all(appAccounts.map(async (account) => {
         const BDAOBalance = await BDAOContract.balanceOf(account.address);
         const formattedBDAOBalance = ethers.formatUnits(BDAOBalance, 18);
         console.log("Fetched BDAO Balance for account", account.address, ":", formattedBDAOBalance);
@@ -129,11 +121,8 @@ const WalletConnectComponent = ({ setAppAccount, setAppAccounts, setAppBalance, 
 
       setBDAObalance(accountBalances[0].BDAOBalance);
       setDepositsBalance(accountBalances[0].deposits);
-      setBalance(accountBalances[0].BDAOBalance);
-      setAppBalance(accountBalances[0].BDAOBalance);
 
       // Pass the accountBalances object to the Account component
-      setMainAccounts(accountBalances);
       setAppAccounts(accountBalances);
 
     } catch (error) {
@@ -144,10 +133,7 @@ const WalletConnectComponent = ({ setAppAccount, setAppAccounts, setAppBalance, 
   const disconnectWallet = async () => {
     web3Modal.clearCachedProvider();
     setMainAccount(null);
-    setAppAccount(null);
     setBDAObalance('0.0');
-    setAppBalance('0.0');
-    setBalance('0.0')
     setAppProvider(null);
   };
 
@@ -180,8 +166,9 @@ const WalletConnectComponent = ({ setAppAccount, setAppAccounts, setAppBalance, 
       ) : (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "50px" }}>
           <Account
-            accounts={accounts}
+            appAccounts={appAccounts}
             copyToClipboard={copyToClipboard}
+            setMainAccount={setMainAccount}
           />
           <button style={{ marginTop: '20px' }} className="primary-button" onClick={disconnectWallet}>Disconnect Wallet</button>
         </div>

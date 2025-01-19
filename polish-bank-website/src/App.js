@@ -43,22 +43,17 @@ const App = () => {
     <meta name="twitter:image" content="%PUBLIC_URL%/logo.webp" />
   </Helmet>
 
-  const [mainAccount, setAccount] = useState(null);
-  const [appAccounts, setAppAcounts] = useState(null);
-  const [balance, setBalance] = useState('0.0');
+  const [mainAccount, setMainAccount] = useState(null);
+  const [appAccounts, setAppAccounts] = useState(null);
   const [isDaoEnabled, setIsDaoEnabled] = useState(false);
   const [provider, setProvider] = useState(null);
 
   useEffect(() => {
     console.log("mainAccount:", mainAccount);
-    const parsedBalance = parseFloat(balance);
-    const newIsDaoEnabled = mainAccount && (parsedBalance > (1000000000 * 0.000001) || (appAccounts && appAccounts.some(acc => parseFloat(acc.balance) > (1000000000 * 0.000001))));
-    console.log("mainAccount:", mainAccount);
-    console.log("Balance:", balance);
-    console.log("Parsed Balance:", parsedBalance);
+    const newIsDaoEnabled = (appAccounts && appAccounts.some(acc => parseFloat(acc.balance) > (1000000000 * 0.000001)));
     console.log("isDaoEnabled:", newIsDaoEnabled);
     setIsDaoEnabled(newIsDaoEnabled);
-  }, [mainAccount, balance]);
+  }, [mainAccount, appAccounts]);
 
 
 
@@ -212,7 +207,7 @@ const App = () => {
               {contractAddress}
             </p>
           </div>
-          <WalletConnectComponent setAppAccount={setAccount} setAppAcounts={setAppAcounts} setAppBalance={setBalance} setAppProvider={setProvider} />
+          <WalletConnectComponent mainAccount={mainAccount} setMainAccount={setMainAccount} appAccounts={appAccounts} setAppAccounts={setAppAccounts} setAppProvider={setProvider} />
         </nav>
       </header>
 
@@ -221,7 +216,7 @@ const App = () => {
           <Element name="deposits" className="section">
             <Fade>
               <h1>Deposits</h1>
-              <DepositComponent provider={provider} setBalance={balance} />
+              <DepositComponent provider={provider} mainAccount={mainAccount} />
             </Fade>
           </Element>
         </div>

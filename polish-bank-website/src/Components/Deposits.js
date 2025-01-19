@@ -9,10 +9,10 @@ const DEPOSITS_ABI = [
   { "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "deposit", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
 ];
 
-const DepositComponent = ({ provider }) => {
+const DepositComponent = ({ provider, mainAccount }) => {
   const [depositList, setDepositList] = useState([]);
   const [isOwner, setIsOwner] = useState(false);
-  const [newDeposit, setnewDeposit] = useState({
+  const [newDeposit, setNewDeposit] = useState({
     amount: '',
   });
   const [errorMessage, setErrorMessage] = useState('');
@@ -63,7 +63,7 @@ const DepositComponent = ({ provider }) => {
           type="text"
           placeholder="Amount"
           value={newDeposit.amount}
-          onChange={(e) => setnewDeposit({ ...newDeposit, amount: e.target.value})}
+          onChange={(e) => setNewDeposit({ ...newDeposit, amount: e.target.value})}
           required
           className="primary-input"
         />

@@ -1,20 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from 'react-scroll';
 import "./Account.css";
 import { FaMoneyBillWave, FaPercentage } from "react-icons/fa";
 
+const Account = ({ appAccounts, copyToClipboard, setMainAccount }) => {
+  const [chosenAccount, setChosenAccount] = useState(appAccounts ? appAccounts[0].address : null);
 
-const Account = ({ accounts, copyToClipboard }) => {
-  if (!accounts) {
+  const chooseAccount = (address) => {
+    setMainAccount(address);
+    setChosenAccount(address);
+  console.log("Chosen Account:", address);
+  };
+
+  if (!appAccounts) {
     return null;
   }
+
   return (
     <div className="cards-container">
-      {accounts.map((element, index) => (
-        <div className="card" key={index}>
+      {appAccounts.map((element, index) => (
+        <div
+          className={`card ${chosenAccount === element.address ? 'chosen' : ''}`}
+          key={index}
+          onClick={() => chooseAccount(element.address)}
+        >
           <div className="card__border"></div>
           <div className="card_title__container">
-            <span className="card_title" onClick={() => copyToClipboard(element.address)}>{truncateAddress(element.address)}</span>
+            <span className="card_title" onClick={() => copyToClipboard(element.address)}>
+              {truncateAddress(element.address)}
+            </span>
           </div>
           <hr className="line" />
           <ul className="card__list">
@@ -25,7 +39,9 @@ const Account = ({ accounts, copyToClipboard }) => {
                   fontSize: "22px"
                 }} 
               />
-              <span className="list_text"><strong style={{color: 'var(--primary-color)'}}>Account Balance :</strong> {formatBalance(parseFloat(element.BDAOBalance).toFixed(2))}  tPLN</span>
+              <span className="list_text">
+                <strong style={{color: 'var(--primary-color)'}}>Account Balance :</strong> {formatBalance(parseFloat(element.BDAOBalance).toFixed(2))} tPLN
+              </span>
             </li>
             <li className="card__list_item">
               <FaPercentage
@@ -35,9 +51,13 @@ const Account = ({ accounts, copyToClipboard }) => {
                 }}
               />
               {(parseFloat(element.deposits).toFixed(2) <= 0) ? (
-                <span className="list_text"><strong style={{color: 'var(--primary-color)'}}>Deposits :</strong> <Link to="deposits" style={{color: 'var(--text-color)'}} smooth={true} duration={500}> No Deposits ? Go make one!</Link></span>
+                <span className="list_text">
+                  <strong style={{color: 'var(--primary-color)'}}>Deposits :</strong> <Link to="deposits" style={{color: 'var(--text-color)'}} smooth={true} duration={500}> No Deposits ? Go make one!</Link>
+                </span>
               ) : (
-                <span className="list_text"><strong style={{color: 'var(--primary-color)'}}>Deposits :</strong> {formatBalance(parseFloat(element.deposits).toFixed(2))}  tPLN</span>
+                <span className="list_text">
+                  <strong style={{color: 'var(--primary-color)'}}>Deposits :</strong> {formatBalance(parseFloat(element.deposits).toFixed(2))} tPLN
+                </span>
               )}
             </li>
           </ul>
@@ -45,7 +65,6 @@ const Account = ({ accounts, copyToClipboard }) => {
       ))}
     </div>
   );
-  
 };
 
 function formatBalance(balance) {
