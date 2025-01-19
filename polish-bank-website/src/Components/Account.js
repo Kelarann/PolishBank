@@ -34,7 +34,7 @@ const Account = ({ accounts, copyToClipboard }) => {
                   fontSize: "22px"
                 }}
               />
-              {(!element.deposits || element.deposits.length === 0) ? (
+              {(parseFloat(element.deposits).toFixed(2) <= 0) ? (
                 <span className="list_text"><strong style={{color: 'var(--primary-color)'}}>Deposits :</strong> <Link to="deposits" style={{color: 'var(--text-color)'}} smooth={true} duration={500}> No Deposits ? Go make one!</Link></span>
               ) : (
                 <span className="list_text"><strong style={{color: 'var(--primary-color)'}}>Deposits :</strong> {formatBalance(parseFloat(element.deposits).toFixed(2))}  tPLN</span>
