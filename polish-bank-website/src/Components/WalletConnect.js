@@ -4,19 +4,24 @@ import { ethers } from 'ethers';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 import Account from './Account.js';
+import BDAO_ABI from "../config/BDAO_ABI.json"; 
+
 
 const WalletConnectComponent = ({ setAppAccount, setAppBalance, setAppProvider }) => {
   const [account, setAccount] = useState(null);
   const [balance, setBalance] = useState('0.0');
   const [BDAObalance, setBDAObalance] = useState('0.0');
+  const [deposits, setDepositsBalance] = useState('0.0');
   const [showPopup, setShowPopup] = useState(false);
   
   const BDAO_CONTRACT_MAP = {
-    'bnb_CONTRACT_ADDRESS' : process.env.REACT_APP_BDAO_CONTRACT,
-    'bnb_ABI' :  'function balanceOf(address owner) view returns (uint256)',
-    'bnbt_CONTRACT_ADDRESS' : process.env.REACT_APP_BDAO_CONTRACT,
-    'bnbt_ABI' :  'function balanceOf(address owner) view returns (uint256)'
-  }
+    bnb: {
+      contractAddress: process.env.REACT_APP_BDAO_CONTRACT,
+    },
+    bnbt: {
+      contractAddress: process.env.REACT_APP_BDAO_CONTRACT,
+    },
+  };
 
   const providerOptions = {
     walletconnect: {
@@ -99,14 +104,22 @@ const WalletConnectComponent = ({ setAppAccount, setAppBalance, setAppProvider }
     const network = await provider.getNetwork();
     try {
       // Fetch BDAO Coin balance
-      console.log(new ethers.Contract(BDAO_CONTRACT_MAP[network.name + '_CONTRACT_ADDRESS'], [BDAO_CONTRACT_MAP[network.name + '_ABI']], provider))
-      const BDAOContract = new ethers.Contract(BDAO_CONTRACT_MAP[network.name + '_CONTRACT_ADDRESS'], [BDAO_CONTRACT_MAP[network.name + '_ABI']], provider);
+      console.log(new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, provider))
+      const BDAOContract = new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, provider);
+      console.log("Available ABIs:", BDAOContract.abi);
       const BDAOBalance = await BDAOContract.balanceOf(address);
       const formattedBDAOBalance = ethers.formatUnits(BDAOBalance, 18);
       console.log("Fetched BDAO Balance:", formattedBDAOBalance);
+
+      const deposits = await BDAOContract.deposits(address);
+      const formattedDeposits = ethers.formatUnits(deposits, 18);
+
+      
       setBDAObalance(formattedBDAOBalance);
+      setDepositsBalance(formattedDeposits);
       setBalance(formattedBDAOBalance);
       setAppBalance(formattedBDAOBalance);
+
     } catch (error) {
       console.error("Error fetching balances:", error);
     }
@@ -145,7 +158,7 @@ const WalletConnectComponent = ({ setAppAccount, setAppBalance, setAppProvider }
         </div>
       )}
       {!account ? (
-        <button className="wallet-button" onClick={connectWallet}>
+        <button className="primary-button" onClick={connectWallet}>
           Connect Wallet
         </button>
       ) : (
@@ -153,6 +166,7 @@ const WalletConnectComponent = ({ setAppAccount, setAppBalance, setAppProvider }
         <Account
           account={account}
           BDAObalance={BDAObalance}
+          deposits={deposits}
           copyToClipboard={copyToClipboard}
           disconnectWallet={disconnectWallet}
         />
@@ -163,3 +177,4 @@ const WalletConnectComponent = ({ setAppAccount, setAppBalance, setAppProvider }
 };
 
 export default WalletConnectComponent;
+

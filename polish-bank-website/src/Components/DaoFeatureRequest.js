@@ -98,26 +98,26 @@ const DaoFeatureRequest = ({ provider, account }) => {
   return (
     <form onSubmit={handleSubmit} className="feature-request-form">
       <label>
-        Type:
+        <p> Type </p>
         <select
           value={featureType}
           onChange={(e) => setFeatureType(e.target.value)}
-          className="form-control"
+          className="primary-input"
         >
           <option value="Feature Request">Feature Request</option>
         </select>
       </label>
       <label>
-        Description:
+      <p> Description </p>
         <textarea
           value={featureDescription}
           onChange={(e) => setFeatureDescription(e.target.value)}
-          className="form-control"
+          className="primary-input"
           rows="4"
           placeholder="Enter your feature request here"
         ></textarea>
       </label>
-      <button type="submit" className="wallet-button">
+      <button type="submit" className="primary-button">
         {messageSigned ? 'Signed' : 'Sign'}
       </button>
     </form>

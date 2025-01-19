@@ -24,19 +24,3 @@
   border-radius: 4px;
   box-sizing: border-box;
 }
-
-.feature-request-form .wallet-button {
-  margin-top: 15px;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #000000;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  align-self: center;
-}
-
-.feature-request-form .wallet-button:hover {
-  background-color: #000000;
-}

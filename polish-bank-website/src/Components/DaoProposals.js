@@ -214,7 +214,7 @@ const DaoProposalsComponent = ({ provider }) => {
             value={newProposal.description}
             onChange={(e) => setNewProposal({ ...newProposal, description: e.target.value })}
             required
-            className="proposal-input"
+            className="primary-input"
           />
           <input
             type="text"
@@ -222,7 +222,7 @@ const DaoProposalsComponent = ({ provider }) => {
             value={newProposal.options}
             onChange={(e) => setNewProposal({ ...newProposal, options: e.target.value })}
             required
-            className="proposal-input"
+            className="primary-input"
           />
           <DatePicker
             selected={newProposal.votingPeriod}
@@ -231,7 +231,7 @@ const DaoProposalsComponent = ({ provider }) => {
             timeFormat="HH:mm"
             timeIntervals={15}
             dateFormat="MMMM d, yyyy h:mm aa"
-            className="proposal-input"
+            className="primary-input"
           />
           <button type="submit" className="create-button">Create Proposal</button>
         </form>

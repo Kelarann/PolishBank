@@ -177,8 +177,8 @@ const App = () => {
                 <div className="dropdown">
                   <Link to="dao" smooth={true} duration={500}>DAO</Link>
                   <div className="dropdown-content">
-                    <Link to="dao-proposals" smooth={true} duration={500}>Vote</Link>
-                    <Link to="dao-feature-request" smooth={true} duration={500}>Feature Request</Link>
+                    <Link to="dao-proposals" smooth={true} duration={500}><p>Vote</p></Link>
+                    <Link to="dao-feature-request" smooth={true} duration={500}><p>Feature Request</p></Link>
                   </div>
                 </div>
               ) : (

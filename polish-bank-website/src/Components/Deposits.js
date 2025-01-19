@@ -65,7 +65,7 @@ const DepositComponent = ({ provider }) => {
           value={newDeposit.amount}
           onChange={(e) => setnewDeposit({ ...newDeposit, amount: e.target.value})}
           required
-          className="deposit-input"
+          className="primary-input"
         />
         <button type="submit" className="create-button">Create deposit</button>
       </form>
