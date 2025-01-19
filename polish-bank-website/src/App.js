@@ -49,12 +49,21 @@ const App = () => {
   const [provider, setProvider] = useState(null);
 
   useEffect(() => {
-    console.log("mainAccount:", mainAccount);
+    window.ethereum.on('accountsChanged', handleAccountsChanged);
     const newIsDaoEnabled = (appAccounts && appAccounts.some(acc => parseFloat(acc.balance) > (1000000000 * 0.000001)));
-    console.log("isDaoEnabled:", newIsDaoEnabled);
     setIsDaoEnabled(newIsDaoEnabled);
-  }, [mainAccount, appAccounts]);
+}, [mainAccount, appAccounts]);
 
+  const handleAccountsChanged = async (accounts) => {
+    console.log('Accounts changed:', accounts);
+    if (accounts.length === 0) {
+      console.log('Please connect to Wallet Provider.');
+    } else {
+      const newAccount = accounts[0];
+      console.log('Switched to account:', newAccount);
+      setMainAccount(newAccount);
+    }
+  };
 
 
   const roadmapData = [
