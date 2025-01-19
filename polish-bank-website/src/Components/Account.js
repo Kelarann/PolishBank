@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-scroll';
 import "./Account.css";
-import { FaMoneyBillWave, FaPercentage } from "react-icons/fa";
+import { FaArrowCircleUp, FaMoneyBillWave, FaPercentage } from "react-icons/fa";
 
-const Account = ({ appAccounts, copyToClipboard, mainAccount }) => {
+const Account = ({ appAccounts, copyToClipboard, mainAccount, transferFromMainAccount }) => {
   const [chosenAccount, setChosenAccount] = useState(null);
 
   useEffect(() => {
@@ -27,6 +27,7 @@ const Account = ({ appAccounts, copyToClipboard, mainAccount }) => {
         <div
           className={`card ${chosenAccount?.toLowerCase().trim() === element.address.toLowerCase().trim() ? 'chosen' : 'not-chosen'}`}
           key={index}
+          value={element.address}
         >
           <div className="card__border"></div>
           <div className="card_title__container">
@@ -63,6 +64,17 @@ const Account = ({ appAccounts, copyToClipboard, mainAccount }) => {
                   <strong style={{ color: 'var(--primary-color)' }}>Deposits :</strong> {formatBalance(parseFloat(element.deposits).toFixed(2))} tPLN
                 </span>
               )}
+            </li>
+            <li className="card__list_item">
+              <FaPercentage
+                style={{
+                  color: "var(--primary-color)", // Black icon color
+                  fontSize: "22px"
+                }}
+              />
+              {(chosenAccount?.toLowerCase().trim() === element.address.toLowerCase().trim()) ? (
+                ''
+              ) : (  <span className="list_text" onClick={() => transferFromMainAccount(element.address, 10000)}>Top up from chosen acc</span>)}
             </li>
           </ul>
         </div>

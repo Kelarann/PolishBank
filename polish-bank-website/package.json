@@ -45,7 +45,7 @@
     "web3modal": "^1.9.12"
   },
   "scripts": {
-    "start": "env-cmd -f .env.development react-app-rewired start",
+    "start": "env-cmd -f .env.development react-app-rewired start BROWSER='chrome'",
     "build": "env-cmd -f .env.production react-app-rewired build",
     "test": "env-cmd -f .env.test react-app-rewired test",
     "eject": "react-scripts eject"

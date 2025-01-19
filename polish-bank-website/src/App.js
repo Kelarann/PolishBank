@@ -216,7 +216,7 @@ const App = () => {
               {contractAddress}
             </p>
           </div>
-          <WalletConnectComponent mainAccount={mainAccount} setMainAccount={setMainAccount} appAccounts={appAccounts} setAppAccounts={setAppAccounts} setAppProvider={setProvider} />
+          <WalletConnectComponent mainAccount={mainAccount} setMainAccount={setMainAccount} appAccounts={appAccounts} setAppAccounts={setAppAccounts} appProvider={provider} setAppProvider={setProvider} />
         </nav>
       </header>
 

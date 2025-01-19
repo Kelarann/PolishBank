@@ -1,3 +1,5 @@
+/* global BigInt */
+
 import React, { useState, useEffect } from 'react';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
@@ -8,9 +10,11 @@ import BDAO_ABI from "../config/BDAO_ABI.json";
 
 
 const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setAppAccounts, setAppProvider }) => {
+  const [BDAOToken, setBDAOToken] = useState(null);
+  const [BDAOTokenTransfer, setBDAOTokenTransfer] = useState(null);
   const [BDAObalance, setBDAObalance] = useState('0.0');
   const [depositsBalance, setDepositsBalance] = useState('0.0');
-  const [showPopup, setShowPopup] = useState(false);
+  const [popUp, setPopUp] = useState({show: false, message: ''});
 
   const BDAO_CONTRACT_MAP = {
     bnb: {
@@ -58,12 +62,16 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
       const instance = await web3Modal.connect();
       const provider = new ethers.BrowserProvider(instance);
       const network = await provider.getNetwork();
-      const BDAOContract = new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, provider);
+      const signer = await provider.getSigner();
+      const BDAOTransfer = new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, signer);
+      const BDAOQuery = new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, provider);
+      setBDAOToken(BDAOQuery);
+      setBDAOTokenTransfer(BDAOTransfer);
       console.log("Connected Network:", network);
 
       const networkName = network.name;
       if (networkName !== process.env.REACT_APP_BNB_NETWORK) {
-        setShowPopup(true);
+        setPopUp({ show: true, message: 'Please connect to Binance Smart Chain Network' });
         return;
       }
       const accounts = await provider.listAccounts();
@@ -71,25 +79,25 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
       try {
         // Fetch BDAO Coin balance
         const accountBalances = await Promise.all(accounts.map(async (account) => {
-          const BDAOBalance = await BDAOContract.balanceOf(account.address);
+          const BDAOBalance = await BDAOToken.balanceOf(account.address);
           const formattedBDAOBalance = ethers.formatUnits(BDAOBalance, process.env.REACT_APP_BDAO_DECIMALS || 18);
-          const deposits = await BDAOContract.deposits(account.address);
+          const deposits = await BDAOToken.deposits(account.address);
           const formattedDeposits = deposits ? ethers.formatUnits(deposits, 18) : '0.0';
-  
+
           return {
             address: account.address,
             BDAOBalance: formattedBDAOBalance,
             deposits: formattedDeposits,
           };
         }));
-  
+
         setBDAObalance(accountBalances[0].BDAOBalance);
         setDepositsBalance(accountBalances[0].deposits);
         setAppAccounts(accountBalances);
-  
+
       } catch (error) {
         console.error("Error fetching balances:", error);
-  
+
       }
 
 
@@ -113,6 +121,24 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
     }
   };
 
+  const transferFromMainAccount = async (accountAddress, amount,) => {
+    try {
+      await BDAOTokenTransfer.transfer(accountAddress, BigInt(amount) * BigInt(10 ** 18));
+
+    }
+    catch (error) {;
+      setPopUp({ show: true, message: 'Error creating transfer' });
+
+      console.log("Error creating transfer:", error);
+    }
+    finally {
+      setBDAObalance(appAccounts.filter((account) => account.address === accountAddress)[0].BDAOBalance);
+      console.log('transfer created successfully');
+      console.log(appAccounts.filter((account) => account.address === accountAddress)[0].BDAOBalance)
+    }
+
+  }
+
   const disconnectWallet = async () => {
     await web3Modal.clearCachedProvider();
     setMainAccount(null);
@@ -122,7 +148,7 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
   };
 
   const closePopup = () => {
-    setShowPopup(false);
+    setPopUp({ show: false });
   };
 
   const copyToClipboard = (text) => {
@@ -135,10 +161,10 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
 
   return (
     <div className="wallet-connect">
-      {showPopup && (
+      {popUp.show && (
         <div className="popup">
           <div className="popup-content">
-            <p>You are not connected to the {process.env.REACT_APP_BNB_NETWORK_DESCRIPTION}.</p>
+            <p>{ popUp.message}</p>
             <button className="popup-button" onClick={closePopup}>OK</button>
           </div>
         </div>
@@ -152,8 +178,9 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
           <Account
             appAccounts={appAccounts}
             copyToClipboard={copyToClipboard}
-            mainAccount = {mainAccount}
+            mainAccount={mainAccount}
             setMainAccount={setMainAccount}
+            transferFromMainAccount={transferFromMainAccount}
           />
           <button style={{ marginTop: '20px' }} className="primary-button" onClick={disconnectWallet}>Disconnect Wallet</button>
         </div>
