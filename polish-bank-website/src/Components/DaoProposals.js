@@ -3,101 +3,7 @@ import { ethers } from 'ethers';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './DaoProposals.css';
-
-const DAO_ABI = [
-  {
-    "inputs": [],
-    "name": "getAllProposals",
-    "outputs": [
-      {
-        "internalType": "string[]",
-        "name": "descriptions",
-        "type": "string[]"
-      },
-      {
-        "internalType": "string[][]",
-        "name": "options",
-        "type": "string[][]"
-      },
-      {
-        "internalType": "uint256[][]",
-        "name": "votes",
-        "type": "uint256[][]"
-      },
-      {
-        "internalType": "bool[]",
-        "name": "isActive",
-        "type": "bool[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "endTimes",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "string[]",
-        "name": "winningOptions",
-        "type": "string[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "option",
-        "type": "uint256"
-      }
-    ],
-    "name": "vote",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "description",
-        "type": "string"
-      },
-      {
-        "internalType": "string[]",
-        "name": "options",
-        "type": "string[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "votingPeriod",
-        "type": "uint256"
-      }
-    ],
-    "name": "createProposal",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
-];
+import BDAO_ABI from "../config/BDAO_ABI.json";
 
 const DaoProposalsComponent = ({ provider }) => {
   const [proposals, setProposals] = useState([]);
@@ -123,14 +29,14 @@ const DaoProposalsComponent = ({ provider }) => {
   const checkIfOwner = async () => {
     const signer = await provider.getSigner();
     const userAddress = await signer.getAddress();
-    const daoContract = new ethers.Contract(contractAddress, DAO_ABI, provider);
+    const daoContract = new ethers.Contract(contractAddress, BDAO_ABI, provider);
     const ownerAddress = await daoContract.owner();
     setIsOwner(userAddress.toLowerCase() === ownerAddress.toLowerCase());
   };
 
   const fetchProposals = async () => {
     try {
-      const daoContract = new ethers.Contract(contractAddress, DAO_ABI, provider);
+      const daoContract = new ethers.Contract(contractAddress, BDAO_ABI, provider);
       const [
         descriptions,
         options,
@@ -160,7 +66,7 @@ const DaoProposalsComponent = ({ provider }) => {
   const voteOnProposal = async (proposalId, option) => {
     try {
       const signer = await provider.getSigner();
-      const daoContractWithSigner = new ethers.Contract(contractAddress, DAO_ABI, signer);
+      const daoContractWithSigner = new ethers.Contract(contractAddress, BDAO_ABI, signer);
       await daoContractWithSigner.vote(proposalId, option);
       console.log(`Voted on proposal ${proposalId} with option ${option}`);
       fetchProposals();
@@ -179,7 +85,7 @@ const DaoProposalsComponent = ({ provider }) => {
       const votingPeriodInSeconds = Math.floor((votingPeriod.getTime() - new Date().getTime()) / 1000);
 
       const signer = await provider.getSigner();
-      const daoContractWithSigner = new ethers.Contract(contractAddress, DAO_ABI, signer);
+      const daoContractWithSigner = new ethers.Contract(contractAddress, BDAO_ABI, signer);
       await daoContractWithSigner.createProposal(description, optionsArray, votingPeriodInSeconds);
       console.log('Proposal created successfully');
       fetchProposals();

@@ -4,10 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import 'react-datepicker/dist/react-datepicker.css';
 import './Deposits.css';
-
-const DEPOSITS_ABI = [
-  { "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "deposit", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
-];
+import BDAO_ABI from "../config/BDAO_ABI.json";
 
 const DepositComponent = ({ provider, mainAccount }) => {
   const [depositList, setDepositList] = useState([]);
@@ -17,8 +14,7 @@ const DepositComponent = ({ provider, mainAccount }) => {
   });
   const [errorMessage, setErrorMessage] = useState('');
   const [showErrorModal, setShowErrorModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const deposits = 5;
+
   const contractAddress = process.env.REACT_APP_BDAO_CONTRACT;
 
   useEffect(() => {
@@ -32,7 +28,7 @@ const DepositComponent = ({ provider, mainAccount }) => {
     try {
       const { amount } = newDeposit;
       const signer = await provider.getSigner();
-      const depositContractWithSigner = new ethers.Contract(contractAddress, DEPOSITS_ABI, signer);
+      const depositContractWithSigner = new ethers.Contract(contractAddress, BDAO_ABI, signer);
       await depositContractWithSigner.deposit(BigInt(amount) * BigInt(10 ** 18));
       console.log('deposit created successfully');
     } catch (error) {
@@ -40,18 +36,6 @@ const DepositComponent = ({ provider, mainAccount }) => {
       setErrorMessage(error.reason);
       setShowErrorModal(true);
     }
-  };
-
-  const indexOfLastdeposit = currentPage * deposits;
-  const indexOfFirstdeposit = indexOfLastdeposit - deposits;
-  const currentDeposits = depositList.slice(indexOfFirstdeposit, indexOfLastdeposit);
-
-  const nextPage = () => {
-    setCurrentPage(prevPage => prevPage + 1);
-  };
-
-  const prevPage = () => {
-    setCurrentPage(prevPage => prevPage - 1);
   };
 
   return (
@@ -63,58 +47,14 @@ const DepositComponent = ({ provider, mainAccount }) => {
           type="text"
           placeholder="Amount"
           value={newDeposit.amount}
-          onChange={(e) => setNewDeposit({ ...newDeposit, amount: e.target.value})}
+          onChange={(e) => setNewDeposit({ ...newDeposit, amount: e.target.value })}
           required
           className="primary-input"
         />
         <button type="submit" className="primary-button">Create deposit</button>
       </form>
-      {currentDeposits.length === 0 ? (
-        <p>No deposits available</p>
-      ) : (
-        currentDeposits.map((deposit, index) => (
-          <div key={index} className="deposit">
-            <h3>{deposit.description}</h3>
-            {deposit.isActive ? (
-              deposit.options.map((option, idx) => (
-                <button
-                  key={idx}
-                  className="vote-button"
-                  onClick={() => { }}
-                >
-                  {option}
-                </button>
-              ))
-            ) : (
-              <div className="result">
-                <p>Voting ended. Winning option: <strong>{deposit.winningOption.toUpperCase()}</strong></p>
-                <ul>
-                  {deposit.options.map((option, idx) => (
-                    <li key={idx}>
-                      <em>{option.toUpperCase()} - {deposit.votes[idx]} votes</em>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        ))
-      )}
-      {showErrorModal && (
-        <div className="error-modal">
-          <div className="error-modal-content">
-            <h3>Error</h3>
-            <p>{errorMessage}</p>
-            <button onClick={() => setShowErrorModal(false)}>Close</button>
-          </div>
-        </div>
-      )}
-      <div className="pagination">
-        {currentPage > 1 && <button onClick={prevPage} className="pagination-button">Previous</button>}
-        {indexOfLastdeposit < depositList.length && <button onClick={nextPage} className="pagination-button">Next</button>}
-      </div>
     </div>
-  );
+  )
 };
 
 export default DepositComponent;

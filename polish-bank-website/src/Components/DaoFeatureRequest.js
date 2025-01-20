@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
-import { db, auth } from '../firebase';
+import firebase from "firebase/compat/app"
+import "firebase/compat/auth"
+import "firebase/compat/firestore"
 import { toast } from 'react-toastify';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; 
 import { signInAnonymously } from 'firebase/auth';
@@ -12,7 +13,7 @@ const DaoFeatureRequest = ({ provider, account }) => {
   const [messageSigned, setMessageSigned] = useState(false);
 
   useEffect(() => {
-    signInAnonymously(auth)
+    signInAnonymously(firebase.auth)
       .then((userCredential) => {
         console.log('User signed in:', userCredential.user);
       })
@@ -50,7 +51,7 @@ const DaoFeatureRequest = ({ provider, account }) => {
         const signature = await signer.signMessage(message);
         setMessageSigned(true);
 
-        await addDoc(collection(db, 'featureRequests'), {
+        await addDoc(collection(firebase.db, 'featureRequests'), {
           initiator: account,
           featureType: featureType,
           featureDescription: featureDescription,

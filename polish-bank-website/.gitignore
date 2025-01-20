@@ -28,3 +28,58 @@ react-app-rewired
 .env.development
 .env.production
 firebase.js
+
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS directory attributes
+Icon?
+._*
+
+# macOS resource fork files
+.Spotlight-V100
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.fseventsd
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Firebase and hosting
+.firebase
+hosting.*
+
+# React-specific files
+react-app-rewired
+.env.development
+.env.production
+firebase.js
+
+# Visual Studio Code settings
+.vscode/
+*.code-workspace
+node_modules
