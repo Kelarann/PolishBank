@@ -20,6 +20,7 @@ import { Helmet } from 'react-helmet';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Slider from 'react-slick';
+import { ethers } from 'ethers';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -47,26 +48,54 @@ const App = () => {
   const [appAccounts, setAppAccounts] = useState(null);
   const [isDaoEnabled, setIsDaoEnabled] = useState(false);
   const [provider, setProvider] = useState(null);
+  const [token, setToken] = useState(null);
+  const [BDAObalance, setBDAObalance] = useState('0.0');
+  const [depositsBalance, setDepositsBalance] = useState('0.0');
 
   useEffect(() => {
     if (typeof window.ethereum !== 'undefined' && typeof window.ethereum.on === 'function') {
-      window.ethereum.on('accountsChanged', handleAccountsChanged);
+      window.ethereum.on('accountsChanged', AccountsChanged);
   } else {
       console.error('MetaMask or a compatible wallet is not detected, or the on method is unavailable.');
   }
-  
     const newIsDaoEnabled = (appAccounts && appAccounts.some(acc => parseFloat(acc.balance) > (1000000000 * 0.000001)));
     setIsDaoEnabled(newIsDaoEnabled);
 }, [mainAccount, appAccounts]);
 
-  const handleAccountsChanged = async (accounts) => {
+  const AccountsChanged = async (accounts) => {
     console.log('Accounts changed:', accounts);
     if (accounts.length === 0) {
       console.log('Please connect to Wallet Provider.');
     } else {
+      FetchBalances(appAccounts);
       const newAccount = accounts[0];
       console.log('Switched to account:', newAccount);
       setMainAccount(newAccount);
+    }
+  };
+
+  const FetchBalances = async (accounts) => {
+    try {
+      // Fetch BDAO Coin balance
+      const accountBalances = await Promise.all(accounts.map(async (account) => {
+        const BDAOBalance = await token.balanceOf(account.address);
+        const formattedBDAOBalance = ethers.formatUnits(BDAOBalance, process.env.REACT_APP_BDAO_DECIMALS || 18);
+        const deposits = await token.deposits(account.address);
+        const formattedDeposits = deposits ? ethers.formatUnits(deposits, 18) : '0.0';
+
+        return {
+          address: account.address,
+          BDAOBalance: formattedBDAOBalance,
+          deposits: formattedDeposits,
+        };
+      }));
+
+      setBDAObalance(accountBalances[0].BDAOBalance);
+      setDepositsBalance(accountBalances[0].deposits);
+      setAppAccounts(accountBalances);
+
+    } catch (error) {
+      console.error("Error fetching balances:", error);
     }
   };
 
@@ -221,7 +250,7 @@ const App = () => {
               {contractAddress}
             </p>
           </div>
-          <WalletConnectComponent mainAccount={mainAccount} setMainAccount={setMainAccount} appAccounts={appAccounts} setAppAccounts={setAppAccounts} appProvider={provider} setAppProvider={setProvider} />
+          <WalletConnectComponent mainAccount={mainAccount} setMainAccount={setMainAccount} appAccounts={appAccounts} setAppAccounts={setAppAccounts} appProvider={provider} setAppProvider={setProvider} token={token} setToken={setToken} BDAObalance={BDAObalance} setBDAObalance = {setBDAObalance} depositsBalance={depositsBalance} setDepositsBalance={setDepositsBalance} FetchBalances={FetchBalances}/>
         </nav>
       </header>
 

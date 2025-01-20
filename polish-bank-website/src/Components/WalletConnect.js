@@ -9,11 +9,9 @@ import Account from './Account.js';
 import BDAO_ABI from "../config/BDAO_ABI.json";
 
 
-const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setAppAccounts, setAppProvider }) => {
+const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setAppAccounts, setAppProvider, token, setToken, BDAOBalance, setBDAObalance, depositsBalance, setDepositsBalance, FetchBalances}) => {
   const [BDAOToken, setBDAOToken] = useState(null);
   const [BDAOTokenTransfer, setBDAOTokenTransfer] = useState(null);
-  const [BDAObalance, setBDAObalance] = useState('0.0');
-  const [depositsBalance, setDepositsBalance] = useState('0.0');
   const [popUp, setPopUp] = useState({show: false, message: ''});
 
   const BDAO_CONTRACT_MAP = {
@@ -65,6 +63,7 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
       const signer = await provider.getSigner();
       const BDAOTransfer = new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, signer);
       const BDAOQuery = new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, provider);
+      setToken(BDAOQuery);
       setBDAOToken(BDAOQuery);
       setBDAOTokenTransfer(BDAOTransfer);
       console.log("Connected Network:", network);
@@ -76,31 +75,7 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
       }
       const accounts = await provider.listAccounts();
       setAppAccounts(accounts);
-      try {
-        // Fetch BDAO Coin balance
-        const accountBalances = await Promise.all(accounts.map(async (account) => {
-          const BDAOBalance = await BDAOToken.balanceOf(account.address);
-          const formattedBDAOBalance = ethers.formatUnits(BDAOBalance, process.env.REACT_APP_BDAO_DECIMALS || 18);
-          const deposits = await BDAOToken.deposits(account.address);
-          const formattedDeposits = deposits ? ethers.formatUnits(deposits, 18) : '0.0';
-
-          return {
-            address: account.address,
-            BDAOBalance: formattedBDAOBalance,
-            deposits: formattedDeposits,
-          };
-        }));
-
-        setBDAObalance(accountBalances[0].BDAOBalance);
-        setDepositsBalance(accountBalances[0].deposits);
-        setAppAccounts(accountBalances);
-
-      } catch (error) {
-        console.error("Error fetching balances:", error);
-
-      }
-
-
+      FetchBalances(accounts);
       const primaryAccount = accounts[0].address;
       setMainAccount(primaryAccount);
       setAppProvider(provider);
