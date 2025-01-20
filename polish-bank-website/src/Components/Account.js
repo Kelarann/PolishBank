@@ -66,12 +66,15 @@ const Account = ({ appAccounts, copyToClipboard, mainAccount, transferFromMainAc
               )}
             </li>
             <li className="card__list_item">
-              <FaPercentage
-                style={{
-                  color: "var(--primary-color)", // Black icon color
-                  fontSize: "22px"
-                }}
-              />
+              {parseFloat(element.deposits).toFixed(2) > 0 && (
+                <FaPercentage
+                  aria-hidden={chosenAccount?.toLowerCase().trim() === element.address.toLowerCase().trim()}
+                  style={{
+                    color: "var(--primary-color)", // Black icon color
+                    fontSize: "22px"
+                  }}
+                />
+              )}
               {(chosenAccount?.toLowerCase().trim() === element.address.toLowerCase().trim()) ? (
                 ''
               ) : (  <span className="list_text" onClick={() => transferFromMainAccount(element.address, 10000)}>Top up from chosen acc</span>)}

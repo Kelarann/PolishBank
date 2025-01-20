@@ -49,7 +49,12 @@ const App = () => {
   const [provider, setProvider] = useState(null);
 
   useEffect(() => {
-    window.ethereum.on('accountsChanged', handleAccountsChanged);
+    if (typeof window.ethereum !== 'undefined' && typeof window.ethereum.on === 'function') {
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+  } else {
+      console.error('MetaMask or a compatible wallet is not detected, or the on method is unavailable.');
+  }
+  
     const newIsDaoEnabled = (appAccounts && appAccounts.some(acc => parseFloat(acc.balance) > (1000000000 * 0.000001)));
     setIsDaoEnabled(newIsDaoEnabled);
 }, [mainAccount, appAccounts]);
