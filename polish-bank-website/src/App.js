@@ -54,27 +54,38 @@ const App = () => {
 
   useEffect(() => {
     if (typeof window.ethereum !== 'undefined' && typeof window.ethereum.on === 'function') {
-      window.ethereum.on('accountsChanged', AccountsChanged);
-  } else {
-      console.error('MetaMask or a compatible wallet is not detected, or the on method is unavailable.');
-  }
-    const newIsDaoEnabled = (appAccounts && appAccounts.some(acc => parseFloat(acc.balance) > (1000000000 * 0.000001)));
-    setIsDaoEnabled(newIsDaoEnabled);
-}, [mainAccount, appAccounts]);
+      const handleAccountsChanged = async (accounts) => {
+        console.log('Accounts changed:', accounts);
+        if (accounts.length === 0) {
+          console.log('Please connect to Wallet Provider.');
+        } else {
+          const newAccount = accounts[0];
+          console.log('Switched to account:', newAccount);
+          setMainAccount(newAccount);
+        }
+      };
 
-  const AccountsChanged = async (accounts) => {
-    console.log('Accounts changed:', accounts);
-    if (accounts.length === 0) {
-      console.log('Please connect to Wallet Provider.');
-    } else {
+      // Register the event listener
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+
+      // Fetch balances and update state
       FetchBalances(appAccounts);
-      const newAccount = accounts[0];
-      console.log('Switched to account:', newAccount);
-      setMainAccount(newAccount);
+      const newIsDaoEnabled = appAccounts && appAccounts.some(account => parseFloat(account.BDAOBalance) > (1000000000 * 0.000001));
+      setIsDaoEnabled(newIsDaoEnabled);
+
+      // Cleanup to avoid duplicate listeners
+      return () => {
+        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+      };
+    } else {
+      console.error('MetaMask or a compatible wallet is not detected, or the on method is unavailable.');
     }
-  };
+  }, [appAccounts]);
 
   const FetchBalances = async (accounts) => {
+    if (accounts === null) {
+      return;
+    }
     try {
       // Fetch BDAO Coin balance
       const accountBalances = await Promise.all(accounts.map(async (account) => {
@@ -101,12 +112,14 @@ const App = () => {
 
 
   const roadmapData = [
-    { quarter: '25Q2', milestones: [
-      { text: 'Create Website', status: 'completed' }, 
-      { text: 'Create X mainAccount', status: 'completed' }, 
-      { text: 'WalletConnect Protocol V1', status: 'completed' }, 
-      { text: 'DAO', status: 'completed' }, 
-      { text: 'Deposits', status: 'in-progress' } ] },
+    {
+      quarter: '25Q2', milestones: [
+        { text: 'Create Website', status: 'completed' },
+        { text: 'Create X mainAccount', status: 'completed' },
+        { text: 'WalletConnect Protocol V1', status: 'completed' },
+        { text: 'DAO', status: 'completed' },
+        { text: 'Deposits', status: 'in-progress' }]
+    },
   ];
 
   const socials = [
@@ -133,7 +146,7 @@ const App = () => {
   ];
 
   const sliderImages = [
-   
+
   ];
 
   const sliderSettings = {
@@ -220,7 +233,7 @@ const App = () => {
             <li className={`tooltip ${isDaoEnabled ? '' : 'enabled'}`}>
               {isDaoEnabled ? (
                 <div className="dropdown">
-                  <Link to="dao" smooth={true} duration={500}>DAO</Link>
+                  <Link to="dao-proposals" smooth={true} duration={500}>DAO</Link>
                   <div className="dropdown-content">
                     <Link to="dao-proposals" smooth={true} duration={500}><p>Vote</p></Link>
                     <Link to="dao-feature-request" smooth={true} duration={500}><p>Feature Request</p></Link>
@@ -237,25 +250,25 @@ const App = () => {
           </ul>
           <hidden><PresaleLink /></hidden>
           <Element name="about" className="section">
-        <div className="about-container">
-          <div className="about-text">
-            <h1>Blockchain Training Project</h1>
-            <p> Creating banking products <strong>on chain </strong> </p>
-          </div>
-        </div>
-      </Element>
+            <div className="about-container">
+              <div className="about-text">
+                <h1>Blockchain Training Project</h1>
+                <p> Creating banking products <strong>on chain </strong> </p>
+              </div>
+            </div>
+          </Element>
           <div className="contract-address">
             <h2 class="app-text">PLN Currency Contract Address</h2>
             <p className="address" onClick={copyToClipboard}>
               {contractAddress}
             </p>
           </div>
-          <WalletConnectComponent mainAccount={mainAccount} setMainAccount={setMainAccount} appAccounts={appAccounts} setAppAccounts={setAppAccounts} appProvider={provider} setAppProvider={setProvider} token={token} setToken={setToken} BDAObalance={BDAObalance} setBDAObalance = {setBDAObalance} depositsBalance={depositsBalance} setDepositsBalance={setDepositsBalance} FetchBalances={FetchBalances}/>
+          <WalletConnectComponent mainAccount={mainAccount} setMainAccount={setMainAccount} appAccounts={appAccounts} setAppAccounts={setAppAccounts} appProvider={provider} setAppProvider={setProvider} token={token} setToken={setToken} BDAObalance={BDAObalance} setBDAObalance={setBDAObalance} depositsBalance={depositsBalance} setDepositsBalance={setDepositsBalance} FetchBalances={FetchBalances} />
         </nav>
       </header>
 
       <Element name="deposits" className="section">
-      <div>
+        <div>
           <Element name="deposits" className="section">
             <Fade>
               <h1>Deposits</h1>
@@ -264,7 +277,7 @@ const App = () => {
           </Element>
         </div>
       </Element>
-    
+
       {/* <Element name="tokenomics" className="section">
         <Fade>
           <h1>Tokenomics</h1>
