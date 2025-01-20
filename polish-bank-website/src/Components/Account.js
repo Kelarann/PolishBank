@@ -69,17 +69,18 @@ const Account = ({ appAccounts, copyToClipboard, mainAccount, transferFromMainAc
               {(chosenAccount?.toLowerCase().trim() === element.address.toLowerCase().trim()) ? (
                 ''
               )
-                : (<FaPercentage
-                  style={{
-                    color: "var(--primary-color)", // Black icon color
-                    fontSize: "22px"
-                  }}
-                />)
+                : (
+                  <>
+                    <FaArrowCircleUp
+                      style={{
+                        color: "var(--primary-color)", // Black icon color
+                        fontSize: "22px"
+                      }}
+                    />
+                    <span className="list_text" onClick={() => transferFromMainAccount(element.address, 10000)}>Top up from chosen acc</span>
+                  </>
+                )
               }
-
-              {(chosenAccount?.toLowerCase().trim() === element.address.toLowerCase().trim()) ? (
-                ''
-              ) : (<span className="list_text" onClick={() => transferFromMainAccount(element.address, 10000)}>Top up from chosen acc</span>)}
             </li>
           </ul>
         </div>
