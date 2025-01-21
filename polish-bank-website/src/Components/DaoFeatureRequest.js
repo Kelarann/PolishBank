@@ -7,7 +7,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { signInAnonymously } from 'firebase/auth';
 import './DaoFeatureRequest.css';
 
-const DaoFeatureRequest = ({ provider, account }) => {
+const DaoFeatureRequest = ({ provider, mainAccount }) => {
   const [featureType, setFeatureType] = useState('Feature Request');
   const [featureDescription, setFeatureDescription] = useState('');
   const [messageSigned, setMessageSigned] = useState(false);
@@ -44,7 +44,7 @@ const DaoFeatureRequest = ({ provider, account }) => {
       return;
     }
 
-    if (provider && account) {
+    if (provider && mainAccount) {
       const signer = await provider.getSigner();
       const message = `${featureDescription}`;
       try {
@@ -52,7 +52,7 @@ const DaoFeatureRequest = ({ provider, account }) => {
         setMessageSigned(true);
 
         await addDoc(collection(firebase.db, 'featureRequests'), {
-          initiator: account,
+          initiator: mainAccount,
           featureType: featureType,
           featureDescription: featureDescription,
           signature: signature,

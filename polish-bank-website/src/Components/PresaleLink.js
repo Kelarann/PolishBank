@@ -18,7 +18,6 @@ const PresaleLink = () => {
           fontWeight: 'bold'
         }}
       >
-        
       </a>
     </div>
   );
