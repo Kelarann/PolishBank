@@ -66,10 +66,9 @@ const App = () => {
         }
       };
 
-      // Register the event listener
+      // Register the ethereum event listener
       window.ethereum.on('accountsChanged', handleAccountsChanged);
-
-      // Fetch balances and update state
+      
       FetchBalances(appAccounts);
       const newIsDaoEnabled = appAccounts && appAccounts.some(account => parseFloat(account.balance) > (1000000000 * 0.000001));
       setIsDaoEnabled(newIsDaoEnabled);
@@ -91,13 +90,13 @@ const App = () => {
       // Fetch BDAO Coin balance
       const accountBalances = await Promise.all(accounts.map(async (account) => {
         const balance = await tokenQueryable.balanceOf(account.address);
-        const formattedbalance = ethers.formatUnits(balance, process.env.REACT_APP_BDAO_DECIMALS || 18);
+        const formattedBalance = ethers.formatUnits(balance, process.env.REACT_APP_BDAO_DECIMALS || 18);
         const deposits = await tokenQueryable.deposits(account.address);
         const formattedDeposits = deposits ? ethers.formatUnits(deposits, 18) : '0.0';
 
         return {
           address: account.address,
-          balance: formattedbalance,
+          balance: formattedBalance,
           deposits: formattedDeposits,
         };
       }));
@@ -110,7 +109,6 @@ const App = () => {
       console.error("Error fetching balances:", error);
     }
   };
-
 
   const roadmapData = [
     {
@@ -355,7 +353,6 @@ const App = () => {
           </div>
         </Fade>
       </Element> */}
-
 
       <Element name="roadmap" className="section">
         <Fade>
