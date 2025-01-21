@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './DaoProposals.css';
-import BDAO_ABI from "../config/BDAO_ABI.json";
 
-const DaoProposalsComponent = ({ provider }) => {
+const DaoProposalsComponent = ({ mainAccount, tokenQueryable, tokenCallable }) => {
   const [proposals, setProposals] = useState([]);
   const [isOwner, setIsOwner] = useState(false);
   const [newProposal, setNewProposal] = useState({
@@ -17,26 +15,21 @@ const DaoProposalsComponent = ({ provider }) => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const proposalsPerPage = 5;
-  const contractAddress = process.env.REACT_APP_BDAO_CONTRACT;
 
   useEffect(() => {
-    if (provider) {
+    if (tokenCallable) {
       checkIfOwner();
       fetchProposals();
     }
-  }, [provider]);
+  }, [tokenCallable]);
 
   const checkIfOwner = async () => {
-    const signer = await provider.getSigner();
-    const userAddress = await signer.getAddress();
-    const daoContract = new ethers.Contract(contractAddress, BDAO_ABI, provider);
-    const ownerAddress = await daoContract.owner();
-    setIsOwner(userAddress.toLowerCase() === ownerAddress.toLowerCase());
+    const ownerAddress = await tokenCallable.owner();
+    setIsOwner(mainAccount.toLowerCase() === ownerAddress.toLowerCase());
   };
 
   const fetchProposals = async () => {
     try {
-      const daoContract = new ethers.Contract(contractAddress, BDAO_ABI, provider);
       const [
         descriptions,
         options,
@@ -44,7 +37,7 @@ const DaoProposalsComponent = ({ provider }) => {
         isActive,
         endTimes,
         winningOptions
-      ] = await daoContract.getAllProposals();
+      ] = await tokenQueryable.getAllProposals();
 
       const fetchedProposals = descriptions.map((description, index) => ({
         description,
@@ -65,9 +58,7 @@ const DaoProposalsComponent = ({ provider }) => {
 
   const voteOnProposal = async (proposalId, option) => {
     try {
-      const signer = await provider.getSigner();
-      const daoContractWithSigner = new ethers.Contract(contractAddress, BDAO_ABI, signer);
-      await daoContractWithSigner.vote(proposalId, option);
+      await tokenCallable.vote(proposalId, option);
       console.log(`Voted on proposal ${proposalId} with option ${option}`);
       fetchProposals();
     } catch (error) {
@@ -84,9 +75,7 @@ const DaoProposalsComponent = ({ provider }) => {
       const optionsArray = options.split(',').map(option => option.trim());
       const votingPeriodInSeconds = Math.floor((votingPeriod.getTime() - new Date().getTime()) / 1000);
 
-      const signer = await provider.getSigner();
-      const daoContractWithSigner = new ethers.Contract(contractAddress, BDAO_ABI, signer);
-      await daoContractWithSigner.createProposal(description, optionsArray, votingPeriodInSeconds);
+      await tokenCallable.createProposal(description, optionsArray, votingPeriodInSeconds);
       console.log('Proposal created successfully');
       fetchProposals();
     } catch (error) {

@@ -48,8 +48,9 @@ const App = () => {
   const [appAccounts, setAppAccounts] = useState(null);
   const [isDaoEnabled, setIsDaoEnabled] = useState(false);
   const [provider, setProvider] = useState(null);
-  const [token, setToken] = useState(null);
-  const [BDAObalance, setBDAObalance] = useState('0.0');
+  const [tokenCallable, setTokenCallable] = useState(null);
+  const [tokenQueryable, setTokenQueryable] = useState(null);
+  const [balance, setBalance] = useState('0.0');
   const [depositsBalance, setDepositsBalance] = useState('0.0');
 
   useEffect(() => {
@@ -70,7 +71,7 @@ const App = () => {
 
       // Fetch balances and update state
       FetchBalances(appAccounts);
-      const newIsDaoEnabled = appAccounts && appAccounts.some(account => parseFloat(account.BDAOBalance) > (1000000000 * 0.000001));
+      const newIsDaoEnabled = appAccounts && appAccounts.some(account => parseFloat(account.balance) > (1000000000 * 0.000001));
       setIsDaoEnabled(newIsDaoEnabled);
 
       // Cleanup to avoid duplicate listeners
@@ -89,19 +90,19 @@ const App = () => {
     try {
       // Fetch BDAO Coin balance
       const accountBalances = await Promise.all(accounts.map(async (account) => {
-        const BDAOBalance = await token.balanceOf(account.address);
-        const formattedBDAOBalance = ethers.formatUnits(BDAOBalance, process.env.REACT_APP_BDAO_DECIMALS || 18);
-        const deposits = await token.deposits(account.address);
+        const balance = await tokenQueryable.balanceOf(account.address);
+        const formattedbalance = ethers.formatUnits(balance, process.env.REACT_APP_BDAO_DECIMALS || 18);
+        const deposits = await tokenQueryable.deposits(account.address);
         const formattedDeposits = deposits ? ethers.formatUnits(deposits, 18) : '0.0';
 
         return {
           address: account.address,
-          BDAOBalance: formattedBDAOBalance,
+          balance: formattedbalance,
           deposits: formattedDeposits,
         };
       }));
 
-      setBDAObalance(accountBalances[0].BDAOBalance);
+      setBalance(accountBalances[0].balance);
       setDepositsBalance(accountBalances[0].deposits);
       setAppAccounts(accountBalances);
 
@@ -263,7 +264,22 @@ const App = () => {
               {contractAddress}
             </p>
           </div>
-          <WalletConnectComponent mainAccount={mainAccount} setMainAccount={setMainAccount} appAccounts={appAccounts} setAppAccounts={setAppAccounts} appProvider={provider} setAppProvider={setProvider} token={token} setToken={setToken} BDAObalance={BDAObalance} setBDAObalance={setBDAObalance} depositsBalance={depositsBalance} setDepositsBalance={setDepositsBalance} FetchBalances={FetchBalances} />
+          <WalletConnectComponent 
+              mainAccount={mainAccount} 
+              setMainAccount={setMainAccount} 
+              appAccounts={appAccounts} 
+              setAppAccounts={setAppAccounts} 
+              appProvider={provider} 
+              setAppProvider={setProvider} 
+              tokenCallable={tokenCallable} 
+              setTokenCallable={setTokenCallable} 
+              setTokenQueryable={setTokenQueryable} 
+              balance={balance} 
+              setBalance={setBalance} 
+              depositsBalance={depositsBalance} 
+              setDepositsBalance={setDepositsBalance} 
+              FetchBalances={FetchBalances} 
+          />
         </nav>
       </header>
 
@@ -272,7 +288,7 @@ const App = () => {
           <Element name="deposits" className="section">
             <Fade>
               <h1>Deposits</h1>
-              <DepositComponent provider={provider} mainAccount={mainAccount} />
+              <DepositComponent mainAccount={mainAccount} tokenCallable={tokenCallable} />
             </Fade>
           </Element>
         </div>
@@ -371,7 +387,7 @@ const App = () => {
           <Element name="dao-proposals" className="section">
             <Fade>
               <h1>DAO Proposals</h1>
-              <DaoProposalsComponent provider={provider} />
+              <DaoProposalsComponent mainAccount={mainAccount} tokenQueryable={tokenQueryable} tokenCallable={tokenCallable} />
             </Fade>
           </Element>
           <Element name="dao-feature-request" className="section">

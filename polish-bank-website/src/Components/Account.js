@@ -45,7 +45,7 @@ const Account = ({ appAccounts, copyToClipboard, mainAccount, transferFromMainAc
                 }}
               />
               <span className="list_text">
-                <strong style={{ color: 'var(--primary-color)' }}>Account Balance :</strong> {formatBalance(parseFloat(element.BDAOBalance).toFixed(2))} tPLN
+                <strong style={{ color: 'var(--primary-color)' }}>Account Balance :</strong> {formatBalance(parseFloat(element.balance).toFixed(2))} tPLN
               </span>
             </li>
             <li className="card__list_item">

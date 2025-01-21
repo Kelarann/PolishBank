@@ -9,9 +9,7 @@ import Account from './Account.js';
 import BDAO_ABI from "../config/BDAO_ABI.json";
 
 
-const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setAppAccounts, setAppProvider, token, setToken, BDAOBalance, setBDAObalance, depositsBalance, setDepositsBalance, FetchBalances}) => {
-  const [BDAOToken, setBDAOToken] = useState(null);
-  const [BDAOTokenTransfer, setBDAOTokenTransfer] = useState(null);
+const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setAppAccounts, setAppProvider, tokenQueryable, setTokenQueryable, tokenCallable, setTokenCallable, balance, setBalance, depositsBalance, setDepositsBalance, FetchBalances}) => {
   const [popUp, setPopUp] = useState({show: false, message: ''});
 
   const BDAO_CONTRACT_MAP = {
@@ -61,11 +59,12 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
       const provider = new ethers.BrowserProvider(instance);
       const network = await provider.getNetwork();
       const signer = await provider.getSigner();
-      const BDAOTransfer = new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, signer);
-      const BDAOQuery = new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, provider);
-      setToken(BDAOQuery);
-      setBDAOToken(BDAOQuery);
-      setBDAOTokenTransfer(BDAOTransfer);
+  
+      const tokenQueryable = new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, provider);
+      const tokenCallable = new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, signer);
+      
+      setTokenQueryable(tokenQueryable);
+      setTokenCallable(tokenCallable);
       console.log("Connected Network:", network);
 
       const networkName = network.name;
@@ -88,7 +87,7 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
         console.log("Disconnected");
         setMainAccount(null);
         setAppAccounts(null);
-        setBDAObalance('0.0');
+        setBalance('0.0');
         setAppProvider(null);
       });
     } catch (error) {
@@ -98,7 +97,7 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
 
   const transferFromMainAccount = async (accountAddress, amount,) => {
     try {
-      await BDAOTokenTransfer.transfer(accountAddress, BigInt(amount) * BigInt(10 ** 18));
+      await tokenCallable.transfer(accountAddress, BigInt(amount) * BigInt(10 ** 18));
 
     }
     catch (error) {;
@@ -107,9 +106,9 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
       console.log("Error creating transfer:", error);
     }
     finally {
-      setBDAObalance(appAccounts.filter((account) => account.address === accountAddress)[0].BDAOBalance);
+      setBalance(appAccounts.filter((account) => account.address === accountAddress)[0].balance);
       console.log('transfer created successfully');
-      console.log(appAccounts.filter((account) => account.address === accountAddress)[0].BDAOBalance)
+      console.log(appAccounts.filter((account) => account.address === accountAddress)[0].balance)
     }
 
   }
@@ -118,7 +117,7 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
     await web3Modal.clearCachedProvider();
     setMainAccount(null);
     setAppAccounts(null);
-    setBDAObalance('0.0');
+    setBalance('0.0');
     setAppProvider(null);
   };
 
