@@ -217,14 +217,14 @@ const App = () => {
 
   return (
     <div className="App">
-      <header className="App-header">
+    <header className="App-header">
       <img
-          src={logo}
-          alt="Polish Bank Logo"
-          className="App-logo"
-          width="400"
-          height="200"
-        />
+        src={logo}
+        alt="Polish Bank Logo"
+        className="App-logo"
+        width="400"
+        height="200"
+      />
 
         <h1 class="app-text" >Polish Bank</h1>
 

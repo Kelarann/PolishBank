@@ -77,11 +77,18 @@ hidden {
 }
 
 .App-logo {
-  max-width: 400px;   
-  width: 100%;        
-  height: auto;      
+  max-width: 400px;
+  width: 100%;
+  height: auto;
   margin-bottom: 20px;
   object-fit: contain;
+}
+
+.App-logo-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .about-logo {
