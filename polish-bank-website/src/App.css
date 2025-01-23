@@ -77,10 +77,11 @@ hidden {
 }
 
 .App-logo {
-  width: 400px;           /* Domyślna szerokość na większe ekrany */
-  height: auto;           /* Automatyczne proporcje */
-  margin-bottom: 20px;    /* Odstęp poniżej logo */
-  object-fit: contain;    /* Utrzymanie proporcji bez zniekształceń */
+  max-width: 400px;   
+  width: 100%;        
+  height: auto;      
+  margin-bottom: 20px;
+  object-fit: contain;
 }
 
 .about-logo {
