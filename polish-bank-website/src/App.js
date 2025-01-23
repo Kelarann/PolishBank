@@ -130,7 +130,7 @@ const App = () => {
     {
       network: 'twitter',
       url: 'https://x.com/polishBank',
-      name: 'CommunityBlockchain',
+      name: 'Polish_Bank',
     },
     {
       network: 'email',
@@ -139,8 +139,8 @@ const App = () => {
     },
     {
       network: 'github',
-      url: 'https://github.com/DevTeampolishBank',
-      name: 'https://github.com/DevTeampolishBank',
+      url: 'https://github.com/Kelarann/PolishBank',
+      name: 'Polish Bank',
     }
   ];
 
@@ -226,7 +226,7 @@ const App = () => {
             <li><Link to="about" smooth={true} duration={500}>About us</Link></li>
             <li><Link to="deposits" smooth={true} duration={500}>Deposits</Link></li>
             <li>
-              <a href="/Community_Blockchain_White_Paper.pdf" target="_blank" rel="noopener noreferrer">Whitepaper</a>
+              <a href="/" target="_blank" rel="noopener noreferrer">Whitepaper</a>
             </li>
             <li><Link to="roadmap" smooth={true} duration={500}>Roadmap</Link></li>
             <li className={`tooltip ${isDaoEnabled ? '' : 'enabled'}`}>
