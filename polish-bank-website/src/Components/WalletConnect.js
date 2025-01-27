@@ -9,7 +9,7 @@ import Account from './Account.js';
 import PLN_ABI from "../config/PLN_ABI.json";
 
 
-const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setAppAccounts, setAppProvider, tokenQueryable, setTokenQueryable, tokenCallable, setTokenCallable, balance, setBalance, depositsBalance, setDepositsBalance, FetchBalances }) => {
+const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setAppAccounts, setAppProvider, tokenQueryable, setTokenQueryable, tokenCallable, setTokenCallable, balance, setBalance, depositsBalance, setDepositsBalance, FetchBalances, setIsDaoEnabled }) => {
   const [popUp, setPopUp] = useState({ show: false, message: '' });
 
   const PLN_CONTRACT_MAP = {
@@ -121,6 +121,7 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
     setBalance('0.0');
     setDepositsBalance('0.0');
     setAppProvider(null);
+    setIsDaoEnabled(false);
   };
 
   const closePopup = () => {

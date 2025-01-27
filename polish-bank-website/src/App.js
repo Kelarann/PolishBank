@@ -68,10 +68,8 @@ const App = () => {
 
       // Register the ethereum event listener
       window.ethereum.on('accountsChanged', handleAccountsChanged);
-      
+
       FetchBalances(appAccounts);
-      const newIsDaoEnabled = appAccounts && appAccounts.some(account => parseFloat(account.balance) > (1000000000 * 0.000001));
-      setIsDaoEnabled(newIsDaoEnabled);
 
       // Cleanup to avoid duplicate listeners
       return () => {
@@ -83,7 +81,8 @@ const App = () => {
   }, [appAccounts]);
 
   const FetchBalances = async (accounts) => {
-    if (accounts === null  || accounts === undefined)  {
+    if (accounts === null || accounts === undefined || tokenQueryable === null || tokenQueryable === undefined) { 
+      setIsDaoEnabled(false);
       return;
     }
     try {
@@ -99,12 +98,14 @@ const App = () => {
           balance: formattedBalance,
           deposits: formattedDeposits,
         };
-      }));
+    }));
 
       setBalance(accountBalances[0].balance);
       setDepositsBalance(accountBalances[0].deposits);
       setAppAccounts(accountBalances);
 
+      const newIsDaoEnabled = appAccounts && appAccounts.some(account => parseFloat(account.balance) > (1000000000 * 0.000001));
+      setIsDaoEnabled(newIsDaoEnabled);
     } catch (error) {
       console.error("Error fetching balances:", error);
     }
@@ -217,15 +218,15 @@ const App = () => {
 
   return (
     <div className="App">
-    <header className="App-header">
-    <img
-        src={logo}
-        alt="Polish Bank Logo"
-        className="App-logo"
-        width="400"
-        height="200"
-        loading="lazy"
-      />
+      <header className="App-header">
+        <img
+          src={logo}
+          alt="Polish Bank Logo"
+          className="App-logo"
+          width="400"
+          height="200"
+          loading="lazy"
+        />
 
         <h1 class="app-text" >Polish Bank</h1>
 
@@ -270,21 +271,23 @@ const App = () => {
               {contractAddress}
             </p>
           </div>
-          <WalletConnectComponent 
-              mainAccount={mainAccount} 
-              setMainAccount={setMainAccount} 
-              appAccounts={appAccounts} 
-              setAppAccounts={setAppAccounts} 
-              appProvider={provider} 
-              setAppProvider={setProvider} 
-              tokenCallable={tokenCallable} 
-              setTokenCallable={setTokenCallable} 
-              setTokenQueryable={setTokenQueryable} 
-              balance={balance} 
-              setBalance={setBalance} 
-              depositsBalance={depositsBalance} 
-              setDepositsBalance={setDepositsBalance} 
-              FetchBalances={FetchBalances} 
+          <WalletConnectComponent
+            mainAccount={mainAccount}
+            setMainAccount={setMainAccount}
+            appAccounts={appAccounts}
+            setAppAccounts={setAppAccounts}
+            appProvider={provider}
+            setAppProvider={setProvider}
+            tokenCallable={tokenCallable}
+            setTokenCallable={setTokenCallable}
+            setTokenQueryable={setTokenQueryable}
+            balance={balance}
+            setBalance={setBalance}
+            depositsBalance={depositsBalance}
+            setDepositsBalance={setDepositsBalance}
+            FetchBalances={FetchBalances}
+            isDaoEnabled={isDaoEnabled}
+            setIsDaoEnabled={setIsDaoEnabled}
           />
         </nav>
       </header>
