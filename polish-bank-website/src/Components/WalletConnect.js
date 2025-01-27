@@ -6,18 +6,18 @@ import { ethers } from 'ethers';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 import Account from './Account.js';
-import BDAO_ABI from "../config/BDAO_ABI.json";
+import PLN_ABI from "../config/PLN_ABI.json";
 
 
-const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setAppAccounts, setAppProvider, tokenQueryable, setTokenQueryable, tokenCallable, setTokenCallable, balance, setBalance, depositsBalance, setDepositsBalance, FetchBalances}) => {
-  const [popUp, setPopUp] = useState({show: false, message: ''});
+const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setAppAccounts, setAppProvider, tokenQueryable, setTokenQueryable, tokenCallable, setTokenCallable, balance, setBalance, depositsBalance, setDepositsBalance, FetchBalances }) => {
+  const [popUp, setPopUp] = useState({ show: false, message: '' });
 
-  const BDAO_CONTRACT_MAP = {
+  const PLN_CONTRACT_MAP = {
     bnb: {
-      contractAddress: process.env.REACT_APP_BDAO_CONTRACT_BNB,
+      contractAddress: process.env.REACT_APP_PLN_CONTRACT_BNB,
     },
     bnbt: {
-      contractAddress: process.env.REACT_APP_BDAO_CONTRACT,
+      contractAddress: process.env.REACT_APP_PLN_CONTRACT,
     },
   };
 
@@ -56,27 +56,23 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
   const connectWallet = async () => {
     try {
       const instance = await web3Modal.connect();
+
+      instance.removeAllListeners(); // Clean existing listeners
+
       const provider = new ethers.BrowserProvider(instance);
       const network = await provider.getNetwork();
       const signer = await provider.getSigner();
-  
-      const tokenQueryable = new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, provider);
-      const tokenCallable = new ethers.Contract(BDAO_CONTRACT_MAP[network.name].contractAddress, BDAO_ABI, signer);
-      
+
+      const tokenQueryable = new ethers.Contract(PLN_CONTRACT_MAP[network.name].contractAddress, PLN_ABI, provider);
+      const tokenCallable = new ethers.Contract(PLN_CONTRACT_MAP[network.name].contractAddress, PLN_ABI, signer);
       setTokenQueryable(tokenQueryable);
       setTokenCallable(tokenCallable);
-      console.log("Connected Network:", network);
 
-      const networkName = network.name;
-      if (networkName !== process.env.REACT_APP_BNB_NETWORK) {
-        setPopUp({ show: true, message: 'Please connect to Binance Smart Chain Network' });
-        return;
-      }
       const accounts = await provider.listAccounts();
       setAppAccounts(accounts);
       FetchBalances(accounts);
-      const primaryAccount = accounts[0].address;
-      setMainAccount(primaryAccount);
+
+      setMainAccount(accounts[0].address);
       setAppProvider(provider);
 
       instance.on('accountsChanged', async (account) => {
@@ -84,11 +80,7 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
       });
 
       instance.on('disconnect', () => {
-        console.log("Disconnected");
-        setMainAccount(null);
-        setAppAccounts(null);
-        setBalance('0.0');
-        setAppProvider(null);
+        disconnectWallet();
       });
     } catch (error) {
       console.error("Could not connect to wallet", error);
@@ -100,7 +92,8 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
       await tokenCallable.transfer(accountAddress, BigInt(amount) * BigInt(10 ** 18));
 
     }
-    catch (error) {;
+    catch (error) {
+      ;
       setPopUp({ show: true, message: 'Error creating transfer' });
 
       console.log("Error creating transfer:", error);
@@ -112,12 +105,21 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
     }
 
   }
-
   const disconnectWallet = async () => {
+    if (web3Modal.providerController) {
+      const providerController = web3Modal.providerController;
+      const walletConnectProvider = providerController.cachedProvider === 'walletconnect';
+      if (walletConnectProvider && providerController.provider) {
+        await providerController.provider.disconnect();
+      }
+    }
     await web3Modal.clearCachedProvider();
     setMainAccount(null);
-    setAppAccounts(null);
+    setAppAccounts([]);
+    setTokenQueryable(null);
+    setTokenCallable(null);
     setBalance('0.0');
+    setDepositsBalance('0.0');
     setAppProvider(null);
   };
 
@@ -138,7 +140,7 @@ const WalletConnectComponent = ({ mainAccount, setMainAccount, appAccounts, setA
       {popUp.show && (
         <div className="popup">
           <div className="popup-content">
-            <p>{ popUp.message}</p>
+            <p>{popUp.message}</p>
             <button className="popup-button" onClick={closePopup}>OK</button>
           </div>
         </div>

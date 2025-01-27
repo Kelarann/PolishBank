@@ -17,7 +17,7 @@ const DaoProposalsComponent = ({ mainAccount, tokenQueryable, tokenCallable }) =
   const proposalsPerPage = 5;
 
   useEffect(() => {
-    if (tokenCallable) {
+    if (tokenCallable && mainAccount) {
       checkIfOwner();
       fetchProposals();
     }
@@ -25,7 +25,7 @@ const DaoProposalsComponent = ({ mainAccount, tokenQueryable, tokenCallable }) =
 
   const checkIfOwner = async () => {
     const ownerAddress = await tokenCallable.owner();
-    setIsOwner(mainAccount.toLowerCase() === ownerAddress.toLowerCase());
+    setIsOwner(mainAccount === ownerAddress);
   };
 
   const fetchProposals = async () => {

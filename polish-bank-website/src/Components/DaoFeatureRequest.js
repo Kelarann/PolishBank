@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import firebase from "firebase/compat/app"
-import "firebase/compat/auth"
-import "firebase/compat/firestore"
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; 
-import { signInAnonymously } from 'firebase/auth';
 import './DaoFeatureRequest.css';
 
 const DaoFeatureRequest = ({ provider, mainAccount }) => {
@@ -12,15 +8,6 @@ const DaoFeatureRequest = ({ provider, mainAccount }) => {
   const [featureDescription, setFeatureDescription] = useState('');
   const [messageSigned, setMessageSigned] = useState(false);
 
-  useEffect(() => {
-    signInAnonymously(firebase.auth)
-      .then((userCredential) => {
-        console.log('User signed in:', userCredential.user);
-      })
-      .catch((error) => {
-        console.error('Error signing in:', error);
-      });
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,13 +38,13 @@ const DaoFeatureRequest = ({ provider, mainAccount }) => {
         const signature = await signer.signMessage(message);
         setMessageSigned(true);
 
-        await addDoc(collection(firebase.db, 'featureRequests'), {
-          initiator: mainAccount,
-          featureType: featureType,
-          featureDescription: featureDescription,
-          signature: signature,
-          timestamp: serverTimestamp(),
-        });
+        // await addDoc(collection(firebase.db, 'featureRequests'), {
+        //   initiator: mainAccount,
+        //   featureType: featureType,
+        //   featureDescription: featureDescription,
+        //   signature: signature,
+        //   timestamp: serverTimestamp(),
+        // });
         toast.success('Feature request submitted successfully!', {
           position: "top-right",
           autoClose: 5000,

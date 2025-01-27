@@ -83,14 +83,14 @@ const App = () => {
   }, [appAccounts]);
 
   const FetchBalances = async (accounts) => {
-    if (accounts === null) {
+    if (accounts === null  || accounts === undefined)  {
       return;
     }
     try {
-      // Fetch BDAO Coin balance
+      // Fetch PLN Coin balance
       const accountBalances = await Promise.all(accounts.map(async (account) => {
         const balance = await tokenQueryable.balanceOf(account.address);
-        const formattedBalance = ethers.formatUnits(balance, process.env.REACT_APP_BDAO_DECIMALS || 18);
+        const formattedBalance = ethers.formatUnits(balance, process.env.REACT_APP_PLN_DECIMALS || 18);
         const deposits = await tokenQueryable.deposits(account.address);
         const formattedDeposits = deposits ? ethers.formatUnits(deposits, 18) : '0.0';
 
@@ -205,7 +205,7 @@ const App = () => {
     },
   };
 
-  const contractAddress = process.env.REACT_APP_BDAO_CONTRACT;
+  const contractAddress = process.env.REACT_APP_PLN_CONTRACT;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(contractAddress).then(() => {
